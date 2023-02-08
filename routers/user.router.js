@@ -3,6 +3,7 @@ const bodyValidation = require('../middlewares/body-validation.middleware');
 const { profilOptionsValidator } = require('../validators/user.validator');
 const authentificate = require('../middlewares/authentificate.middleware');
 
+//TODO Toutes les routes users sont OK !! Implémenter l'autorisation d'intégarir avec TOUS les comptes en tant qu'ADMIN !
 
 const userRouter = require('express').Router();
 
@@ -29,7 +30,7 @@ userRouter.put('/friend/:id', authentificate(), userController.declineFriendRequ
 userRouter.delete('/friend/:id', authentificate(), userController.deleteFriend);
 
 // Route ADMIN : suppression d'un compte utilisateur de l'application globable
-userRouter.delete('/:id', authentificate(), userController.delete); //TODO vérifier la logique d'accès. Renvoie actuellement une 404 native lors d'un test
+userRouter.delete('/:id', authentificate(), userController.delete);
 
 
 module.exports = userRouter;

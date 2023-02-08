@@ -70,8 +70,22 @@ const userService = {
     },
 
     delete: async (id) => {
+
+        console.log("Compte a delete via son id -> ", id);
+
         // Récupération de l'id de la DB
-        const userToDeleted = await db.User.destroy({
+        let userExist = await db.User.findByPk(id);
+
+        console.log("Je suis userExist ", userExist);
+
+        // Si l'id récupéré n'existe pas = undefined ---> alors stopper la fonction
+        if (userExist == undefined) {
+            console.log("L'utilisateur n'existe pas dans la DB !")
+            return;
+        }
+
+        // Si l'id de la DB existe, le supprimer de la DB
+        userExist = await db.User.destroy({
             where: { id }
         })
 
@@ -79,14 +93,7 @@ const userService = {
                 console.log(error);
             });
 
-        // Si le user n'existe pas, stopper la fonction
-        if (userToDeleted == undefined) {
-            return null;
-        }
-
-        console.log("Compte a delete via son id -> ", id);
-
-        return userToDeleted === 1;
+        return userExist === 1;
     },
 
     getHashPassword: async (mail) => {

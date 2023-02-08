@@ -2,7 +2,6 @@ const { ErrorResponse } = require('../api-responses/error-response');
 const { SuccessResponse } = require('../api-responses/success-response');
 const { checkIfMailExists } = require('../services/user.service');
 const userService = require('../services/user.service');
-const { db } = require('../models')
 
 const userController = {
 
@@ -95,9 +94,11 @@ const userController = {
 
         if (deletedUser == null) {
             res.send(new ErrorResponse("L'utiliseur n'existe pas !", 404));
+        } 
+        
+        else {
+            res.send("Le compte a bien été supprimé !");
         }
-
-        res.send("deletedUser");
     },
 
     addFriend: async (req, res) => {
