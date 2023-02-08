@@ -3,11 +3,11 @@ const { decodeJWT } = require('../utils/jwt.utils');
 
 /**
  * Middleware d'authentification via les JSON Web Token
- * @param {{isAdmin: boolean}} options 
+ * @param {{adminOnly: boolean}} options 
  * @returns {(req: Request, res: Response, next: NextFunction) => Void}
  */
 
-const authentificate = () => {
+const authentificate = (options = { adminOnly: true }) => {
 
     /** 
        * Middleware pour gérer les jwt
@@ -30,21 +30,46 @@ const authentificate = () => {
             return res.sendStatus(401)
         }
 
-        else {
-            // Récuperation des données du JWT
-            let tokenData
+        // Récuperation des données du JWT
+        let tokenData;
 
+        try {
             // Extraction des données
-            tokenData = await decodeJWT(token).catch(_ => {
-                // En cas d'erreur, envoi d'un erreur
-                res.sendStatus(401)
-            })
+            tokenData = await decodeJWT(token);
 
-            req.user = tokenData;
-            console.log("TOKEN DATA ", tokenData);
-            next();
         }
-    }
+        catch (error) {
+            // En cas d'erreur, envoi d'un erreur
+            return res.sendStatus(403);
+        }
+
+        // Vérification des droits de l'utilisateur si le flag "adminOnly" est présent
+        // if (options.adminOnly && !tokenData.isAdmin) {
+        //     console.log("adminOnly = ", options.adminOnly);
+        //     console.log("isAdmin = ", tokenData.isAdmin);
+        //     // Erreur 403 si l'utilisateur n'a pas les droits
+        //     return res.sendStatus(403);
+        // }
+
+        // next();
+
+        if ((tokenData.id && req.params.id === undefined) || (tokenData.id === req.params.id)) {
+
+            console.log("Condition 1 -- tokenData.id --> ", tokenData.id);
+            
+            req.user = tokenData;
+            
+            console.log("Condition 1 -- req.user --> ",req.user);
+            next();
+        } 
+        
+        else {
+            console.log("ELSE tokenData.id --> ", tokenData.id);
+            console.log("ELSE req.params.id --> ", req.params.id);
+            return res.sendStatus(403);
+        }
+
+    };
 };
 
 module.exports = authentificate;
