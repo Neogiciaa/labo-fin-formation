@@ -5,17 +5,21 @@ const authService = {
 
     register: async (pseudo, lastName, firstName, mail, password) => {
 
-        // Hashage du mot de passe
-        const hashPassword = await argon2.hash(password);
+        const userExist = await userService.checkIfMailExists(mail)
+        console.log("Mail a verifier -> ", mail);
 
-        // Création du user dans la DB via le userService
-        const user = await userService.add({ pseudo, lastName, firstName, mail, hashPassword });
+        if (userExist == null) {
 
-        console.log('user', user);
+            // Hashage du mot de passe
+            const hashPassword = await argon2.hash(password);
 
-        // FIXME ADD JWT ??
+            // Création du user dans la DB via le userService
+            const user = await userService.add({ pseudo, lastName, firstName, mail, hashPassword });
 
-        return user;
+            console.log('user', user);
+            return user;
+        }
+        return;
     },
 
     login: async (mail, password) => {

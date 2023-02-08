@@ -1,4 +1,6 @@
 const { ErrorResponse } = require("../api-responses/error-response");
+const { SuccessResponse } = require("../api-responses/success-response");
+
 const authService = require("../services/auth.service");
 const { generateJWT } = require("../utils/jwt.utils");
 
@@ -13,9 +15,11 @@ const authController = {
 
         // Envoi de la réponse
         if (!data) {
-            res.sendStatus(400);
+            // Si compte déja existant alors error !
+            res.status(400).json(new ErrorResponse("Cette adresse mail est déjà utilisée !"));
             return;
         }
+        // Compte bien crée !
         res.sendStatus(204);
     },
 
