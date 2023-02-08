@@ -8,12 +8,14 @@ const userRegisterValidator = yup.object().shape({
     lastName: yup.string().trim().required().min(2).max(20),
     firstName: yup.string().trim().required().min(2).max(20),
     mail: yup.string().trim().required().email().min(1).max(50),
-    password: yup.string().min(8).matches(regexPwd, regexPwdError).required()
+    password: yup.string().min(8).matches(regexPwd, regexPwdError).required(),
+    isAdmin: yup.boolean()
 });
 
 const userLoginValidator = yup.object().shape({
     mail: yup.string().trim().required(),
-    password: yup.string().required()
+    password: yup.string().required(),
+    isAdmin: yup.boolean()
 });
 
 const profilOptionsValidator = yup.object().shape({

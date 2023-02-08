@@ -2,14 +2,17 @@ const { UserDTO } = require('../dto/user.dto');
 const db = require('../models');
 const argon2 = require('argon2');
 
+
 const userService = {
 
     getAll: async () => {
         // Récupération des users via sequelize
-        const users = await db.User.findAll();
+        const user = await db.User.findAll();
 
         // Envoi des données dans un objet DTO
-        return users;
+        return {
+            users: user.map(user => new UserDTO(user))
+        }
     },
 
     getById: async (id) => {
@@ -30,7 +33,8 @@ const userService = {
             throw new Error('Data is required !');
         }
 
-        console.log('data', data);
+        console.log('DATAS !!', data);
+
 
         // Ajouter un user dans la DB via la méthode "create"
         const newUser = await db.User.create(data);
@@ -112,7 +116,13 @@ const userService = {
         console.log("Log de Mail dans la fonction Checkifmailexists ->", mail);
         console.log("Je suis user après checkMail", user);
 
-        return user.dataValues.id ?? null;
+        if (user == null) {
+            return;
+
+        } else {
+            return user.dataValues.id;
+        }
+
     },
 
     addFriend: async (userId, friendId) => {

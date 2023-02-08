@@ -2,7 +2,7 @@ const userController = require('../controllers/user.controller');
 const bodyValidation = require('../middlewares/body-validation.middleware');
 const { profilOptionsValidator } = require('../validators/user.validator');
 const authentificate = require('../middlewares/authentificate.middleware');
-const authentificateHasAdmin = require('../middlewares/authentificateHasAdmin.middleware');
+
 
 const userRouter = require('express').Router();
 

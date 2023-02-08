@@ -7,12 +7,12 @@ class UserDTO {
         this.lastName = data.lastName;
         this.firstName = data.firstName;
         this.mail = data.mail;
-        this.hashpassword = data.hashpassword;
-        this.street = data.street;
-        this.number = data.number;
-        this.postalCode = data.postalCode;
-        this.city = data.city;
-        this.country = data.country;
+        // this.hashPassword = data.hashPassword;
+        // this.street = data.street;
+        // this.number = data.number;                   //         < -- Ces infos la seront peu être un jour utilisées :D
+        // this.postalCode = data.postalCode;
+        // this.city = data.city;
+        // this.country = data.country;
     }
 };
 
