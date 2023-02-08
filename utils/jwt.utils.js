@@ -12,12 +12,13 @@ const generateJWT = ({ id, mail }) => {
             expiresIn: '5h'
         };
 
+        console.log("DATA -> ", data);
+
         jwt.sign(data, secret, options, (error, token) => {
             if (error) {
                 reject(error);
                 return;
             }
-
             resolve(token);
             console.log("Generated Token -> ", token);
         });
@@ -25,6 +26,8 @@ const generateJWT = ({ id, mail }) => {
 };
 
 const decodeJWT = (token) => {
+
+
     if (!token) {
         return Promise.reject(new Error('Invalid JWT'));
     }

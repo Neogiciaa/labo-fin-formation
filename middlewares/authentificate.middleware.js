@@ -29,18 +29,19 @@ const authentificate = () => {
             console.log("aucun token recu, erreur 401.")
             return res.sendStatus(401)
         }
-        
+
         else {
             // Récuperation des données du JWT
             let tokenData
+
             // Extraction des données
             tokenData = await decodeJWT(token).catch(_ => {
                 // En cas d'erreur, envoi d'un erreur
                 res.sendStatus(401)
             })
 
-            console.log("je suis Owner, je gère seulement mon app");
             req.user = tokenData;
+            console.log("TOKEN DATA ", tokenData);
             next();
         }
     }
