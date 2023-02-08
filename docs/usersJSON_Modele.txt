@@ -1,0 +1,20 @@
+-- User 1 --
+
+{
+	"pseudo": "Mike",
+	"lastName": "Bastin",
+	"firstName": "Mike",
+	"mail": "mike@gmail.com",
+	"password": "Mike1234="
+}
+
+
+-- User 2 --
+
+{
+	"pseudo": "Stephen",
+	"lastName": "Chevalier",
+	"firstName": "Stephen",
+	"mail": "stephen@gmail.com",
+	"password": "Stephen1234="
+}
