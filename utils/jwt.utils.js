@@ -12,8 +12,6 @@ const generateJWT = ({ id, mail }) => {
             expiresIn: '5h'
         };
 
-        console.log("DATA -> ", data);
-
         jwt.sign(data, secret, options, (error, token) => {
             if (error) {
                 reject(error);

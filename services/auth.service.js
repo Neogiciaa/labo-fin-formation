@@ -6,7 +6,6 @@ const authService = {
     register: async (pseudo, lastName, firstName, mail, password) => {
 
         const userExist = await userService.checkIfMailExists(mail)
-        console.log("Mail a verifier -> ", mail);
 
         if (userExist == null) {
 
@@ -16,7 +15,6 @@ const authService = {
             // Création du user dans la DB via le userService
             const user = await userService.add({ pseudo, lastName, firstName, mail, hashPassword });
 
-            console.log('user', user);
             return user;
         }
         return;

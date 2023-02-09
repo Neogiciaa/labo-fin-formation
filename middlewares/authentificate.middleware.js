@@ -43,6 +43,8 @@ const authentificate = (options = { adminOnly: true }) => {
             return res.sendStatus(403);
         }
 
+        //TODO implémenter les droits administrateur (plein pouvoir sur l'app) dans un futur si on estime cela utile
+
         // Vérification des droits de l'utilisateur si le flag "adminOnly" est présent
         // if (options.adminOnly && !tokenData.isAdmin) {
         //     console.log("adminOnly = ", options.adminOnly);
@@ -54,18 +56,13 @@ const authentificate = (options = { adminOnly: true }) => {
         // next();
 
         if ((tokenData.id && req.params.id === undefined) || (tokenData.id === req.params.id)) {
-
-            console.log("Condition 1 -- tokenData.id --> ", tokenData.id);
             
             req.user = tokenData;
-            
-            console.log("Condition 1 -- req.user --> ",req.user);
             next();
         } 
         
         else {
-            console.log("ELSE tokenData.id --> ", tokenData.id);
-            console.log("ELSE req.params.id --> ", req.params.id);
+
             return res.sendStatus(403);
         }
 
