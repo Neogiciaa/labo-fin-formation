@@ -112,9 +112,6 @@ const userService = {
             where: { mail }
         });
 
-        console.log("Log de Mail dans la fonction Checkifmailexists ->", mail);
-        console.log("Je suis user après checkMail", user);
-
         if (user == null) {
             console.log("L'utilisateur recherché n'existe pas !");
             return;

@@ -1,6 +1,5 @@
 const { ErrorResponse } = require('../api-responses/error-response');
 const { SuccessResponse } = require('../api-responses/success-response');
-const { checkIfMailExists } = require('../services/user.service');
 const userService = require('../services/user.service');
 
 const userController = {
