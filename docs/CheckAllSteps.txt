@@ -26,11 +26,11 @@ Get All ->
 
 Get By Id ->
 
-AddFriendRequest -> sender & receiver initialiser en "NULL" par défaut ??
+AddFriendRequest -> OK
 
-AcceptFriendRequest ->
+AcceptFriendRequest -> EN COURS
 
-DeclineFriendRequest ->
+DeclineFriendRequest -> EN COURS
 
 DeleteFriend ->
 
