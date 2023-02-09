@@ -95,5 +95,8 @@ module.exports = (sequelize) => {
     User.belongsToMany(User, { as: "senders", through: 'MTM_friendlist', foreignKey: "userId" });
     User.belongsToMany(User, { as: "receivers", through: 'MTM_friendlist', foreignKey: "friendId" });
 
+    User.belongsToMany(User, { as: "sender", through: 'MTM_friendlistRequest', foreignKey: "userId" });
+    User.belongsToMany(User, { as: "receiver", through: 'MTM_friendlistRequest', foreignKey: "friendId" });
+
     return User;
 };

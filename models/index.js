@@ -27,7 +27,13 @@ db.MTM_friendlistRequest = require('./MTM_friendlistRequest.model')(sequelize);
 // Ajout des relations
 
 // - One to Many (User <-> Friend-list) récursive !!
-// TODO créer la relation récursive de user sur elle-même! On suppose...
+// db.MTM_friendlist.hasMany(db.User, {
+//     foreignKey: {
+//         allowNull: false
+//     },
+//     onDelete: 'NO ACTION'
+// });
+// db.User.belongsTo(db.MTM_friendlist);
 
 // - Many to Many (House <-> User)
 // db.House.belongsToMany(db.User, { through: 'house_user' });
