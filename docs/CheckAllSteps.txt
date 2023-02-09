@@ -28,7 +28,10 @@ Get By Id ->
 
 AddFriendRequest -> OK
 
-AcceptFriendRequest -> EN COURS
+AcceptFriendRequest -> EN COURS -- 2 voie possible : Garder isAccepted dans le model friendlistRequest et s'en servir dans une fonction update sur une route put
+                                                        -- Probablement la meilleure option --
+                                            soit   : Supprimer isAccepted et faire un POST pour appliquer une méthode qui "create" & "destroy" les MTM_friendlist & friendlistRequest 
+                                                        -- Problème potentiel avec la seconde option = on ne peut pas avoir 2 routes avec la même requête !! --
 
 DeclineFriendRequest -> EN COURS
 
