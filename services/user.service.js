@@ -33,9 +33,6 @@ const userService = {
             throw new Error('Data is required !');
         }
 
-        console.log('DATAS !!', data);
-
-
         // Ajouter un user dans la DB via la méthode "create"
         const newUser = await db.User.create(data);
 
@@ -71,16 +68,11 @@ const userService = {
 
     delete: async (id) => {
 
-        console.log("Compte a delete via son id -> ", id);
-
         // Récupération de l'id de la DB
         let userExist = await db.User.findByPk(id);
 
-        console.log("Je suis userExist ", userExist);
-
         // Si l'id récupéré n'existe pas = undefined ---> alors stopper la fonction
         if (userExist == undefined) {
-            console.log("L'utilisateur n'existe pas dans la DB !")
             return;
         }
 
@@ -124,6 +116,7 @@ const userService = {
         console.log("Je suis user après checkMail", user);
 
         if (user == null) {
+            console.log("L'utilisateur recherché n'existe pas !");
             return;
 
         } else {
@@ -131,42 +124,6 @@ const userService = {
         }
 
     },
-
-    addFriend: async (userId, friendId) => {
-
-        await db.MTM_friendlist.create({
-            userId,
-            friendId,
-
-        });
-    },
-
-    deleteFriend: async (userId, friendId) => {
-        // TODO Supprimer le lien entre deux amis :(
-    },
-
-    acceptFriendRequest: async (userId, friendId, isAccepted) => {
-
-        let user = await db.MTM_friendlist.findOne({
-            where: { friendId, userId }
-        })
-
-        console.log(" !", user);
-        user.dataValues.isAccepted = true
-
-        user.update(isAccepted)
-            .then((res) => {
-                isAccepted = true;
-                console.log("IS ACCEPTED OR NOT ?", isAccepted);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    },
-
-    declineFriendRequest: async (userId, friendId) => {
-
-    }
 
     // TODO check l'implémentation d'un GetHouse par l'id du user
     // getHouses: async (id) => {

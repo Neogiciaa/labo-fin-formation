@@ -45,7 +45,6 @@ const userController = {
     update: async (req, res) => {
         // Récupération des infos du body (validé par le middleware)
         const data = req.validateData;
-        console.log('Je passe dans update du controller');
 
         // Récupération de l'id
         const id = req.params.id;
@@ -58,32 +57,26 @@ const userController = {
 
             // Tester si le mail es unique avant l'ajout
             if (mailHasModified && await userService.checkIfMailExists(data.mail)) {
-                console.log('Je suis dans le if de vérification mail existe ou non !');
+        
                 res.status(400).json(new ErrorResponse(
                     `The mail "${data.mail}" already exists !`
                 ));
-                console.log(data.mail);
                 return;
             }
         };
 
-        console.log('Je ne passe pas dans le if');
-
         // Mise à jour dans la DB
         const userUpdated = await userService.update(id, data);
 
-        console.log('Je met à jour la DB', id, data);
-
         // Si l'élément est inexistant -> Error 404
         if (!userUpdated) {
-            console.log("userUpdated = false");
+
             res.sendStatus(404);
             return;
         }
 
         // Envoie de la réponse
         res.status(204).json(new SuccessResponse(userUpdated), 204);
-        console.log(userUpdated);
     },
 
     delete: async (req, res) => {
@@ -99,58 +92,6 @@ const userController = {
         else {
             res.send("Le compte a bien été supprimé !");
         }
-    },
-
-    addFriend: async (req, res) => {
-
-        // Récupération de l'id du user connecté
-        const id = req.user.id;
-        console.log('je suis le user connecté', id);
-
-        // Récupération du mail recherché par le user 
-        const { mail } = req.body;
-        const idFriend = await checkIfMailExists(mail)
-
-
-        if (!idFriend) {
-            console.log("L'user recherché n'existe pas !");
-            return null;
-        }
-
-        else {
-            console.log("Je suis l'ami ajouté", idFriend)
-            await userService.addFriend(id, idFriend);
-
-            res.status(200).json("La demande d'ami a bien été envoyée");
-        }
-    },
-
-    //TODO à faire après avoir résolu "addFriend"
-    deleteFriend: async (req, res) => {
-
-        const id = req.user.id;
-        console.log('je suis le user connecté', id);
-
-
-    },
-
-    acceptFriendRequest: async (req, res) => {
-
-        const receivers = req.user.id;
-        console.log('je suis le user connecté', userId);
-
-        const senders = req.body;
-
-        console.log("ID DU COMPTE A RETROUVER -> ", mail);
-        const friendId = await checkIfMailExists(mail)
-
-        await userService.acceptFriendRequest(receivers, senders);
-        res.status(200).json("Demande d'ami acceptée !")
-
-    },
-
-    declineFriendRequest: async (req, res) => {
-        // TODO ui x2
     }
 
 };
