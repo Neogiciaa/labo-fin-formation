@@ -1,8 +1,5 @@
 const friendController = require('../controllers/friend.controller');
-const bodyValidation = require('../middlewares/body-validation.middleware');
-const { profilOptionsValidator } = require('../validators/user.validator');
 const authentificate = require('../middlewares/authentificate.middleware');
-
 
 const friendRouter = require('express').Router();
 
@@ -19,10 +16,10 @@ friendRouter.post('/', authentificate(), friendController.addFriendRequest)
 // // friendRouter.put('/:id', authentificate(), bodyValidation(profilOptionsValidator), friendController.update)
 
 // // Accepter les demandes d'amis !
-// friendRouter.put('/friend/:id', authentificate(), friendController.acceptFriendRequest)
+friendRouter.put('/friend', authentificate(), friendController.acceptFriendRequest)
 
 // // Refuser la demande d'amis !
-// friendRouter.put('/friend/:id', authentificate(), friendController.declineFriendRequest)
+friendRouter.put('/friends', authentificate(), friendController.declineFriendRequest)
 
 
 // // Supprimer un ami de sa liste d'ami

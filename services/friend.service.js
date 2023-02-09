@@ -52,32 +52,64 @@ const friendService = {
         });
     },
 
+    acceptFriendRequest: async (receiver, sender) => {
+
+        console.log("receiver -> ", receiver);
+        console.log("sender -> ", sender);
+
+        await db.MTM_friendlist.create({
+            receiver,
+            sender
+        });
+
+        await db.MTM_friendlistRequest.destroy({
+            where: {
+                receiver: {
+                    [Op.or] : [receiver, sender]
+                },
+                sender: {
+                    [Op.or] : [sender, receiver]
+                }
+            }
+        })
+
+        // let user = await db.MTM_friendlist.findOne({
+        //     where: { friendId, userId }
+        // })
+
+        // console.log(" !", user);
+        // user.dataValues.isAccepted = true
+
+        // user.update(isAccepted)
+        //     .then((res) => {
+        //         isAccepted = true;
+        //         console.log("IS ACCEPTED OR NOT ?", isAccepted);
+        //     })
+        //     .catch((error) => {
+        //         console.log(error);
+        //     });
+    },
+
+    declineFriendRequest: async (receiver, sender) => {
+
+        console.log("receiver -> ", receiver);
+        console.log("sender -> ", sender);
+
+        await db.MTM_friendlistRequest.destroy({
+            where: {
+                receiver: {
+                    [Op.or] : [receiver, sender]
+                },
+                sender: {
+                    [Op.or] : [sender, receiver]
+                }
+            }
+        })
+    },
+
     deleteFriend: async (userId, friendId) => {
         // TODO Supprimer le lien entre deux amis :(
     },
-
-    acceptFriendRequest: async (userId, friendId, isAccepted) => {
-
-        let user = await db.MTM_friendlist.findOne({
-            where: { friendId, userId }
-        })
-
-        console.log(" !", user);
-        user.dataValues.isAccepted = true
-
-        user.update(isAccepted)
-            .then((res) => {
-                isAccepted = true;
-                console.log("IS ACCEPTED OR NOT ?", isAccepted);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    },
-
-    declineFriendRequest: async (userId, friendId) => {
-
-    }
 };
 
 module.exports = friendService
