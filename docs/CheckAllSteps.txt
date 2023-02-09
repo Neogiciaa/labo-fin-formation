@@ -1,0 +1,42 @@
+Authentification fix bug
+
+Register -> OK
+
+Login -> OK mais vérifier l'expiration du token dans le fichier JWT.utils (probablement lié aux fonctions delete, etc)
+
+User fix bug 
+
+Get All -> OK
+
+Get By Id -> OK uniquement sur moi-même
+
+Update -> OK
+
+Delete -> OK
+
+--------------------------------------------------
+
+Implémenter l'autorisation d'intégarir avec TOUS les comptes en tant qu'ADMIN !
+
+----------------------------------------------
+
+FriendList fix bug
+
+Get All -> 
+
+Get By Id ->
+
+AddFriendRequest -> sender & receiver initialiser en "NULL" par défaut ??
+
+AcceptFriendRequest ->
+
+DeclineFriendRequest ->
+
+DeleteFriend ->
+
+
+
+
+
+Delete -> OK
+
