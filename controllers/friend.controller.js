@@ -24,20 +24,41 @@ const friendController = {
 
         // Récupération du mail recherché par le user 
         const { mail } = req.body;
-        const receiverId = await checkIfMailExists(mail)
+        const receiverId = await checkIfMailExists(mail);
 
+        // const relationExist = await friendService.getAll(senderId, receiverId);
+
+        const isPendingRequest = await friendService.temporaryRelationExist(senderId, receiverId)
 
         if (!receiverId) {
             console.log("L'user recherché n'existe pas !");
-            return null;
+            // res.sendStatus(404);
+            // return;
+
+            res.send(new ErrorResponse("L'utiliseur n'existe pas !", 404));
+            return;
         }
 
-        else {
+        // Code a tester lorsque la méthode accept/decline request sera fonctionelle
+        // if (relationExist !== null) {
+        //     console.log("Vous êtes déja en amis !");
+        //     res.send(new ErrorResponse("Vous êtes déja amis !", 404));
+        //     return; 
+        // }
+
+        if (isPendingRequest !== null) {
+            console.log("Vous avez deja une demande d'ami en cours");
+            res.send(new ErrorResponse("Vous avez déja une demande d'ami en cours", 404));
+            return;
+        }
+        // TODO Clean code à faire --> If Else ?
+        if (isPendingRequest == null) { // "relationExist == null &&" a add dans les conditions !
+
             console.log("Je suis l'ami ajouté", receiverId)
             await friendService.addFriendRequest(senderId, receiverId);
-
-            res.status(200).json("La demande d'ami a bien été envoyée");
+            res.send(new SuccessResponse("La demande d'ami a bien été envoyée!", 200));
         }
+
     },
 
     //TODO à faire après avoir résolu "addFriend"

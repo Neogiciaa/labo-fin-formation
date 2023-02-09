@@ -13,7 +13,7 @@ friendRouter.get('/', authentificate(), friendController.getAll)
 // friendRouter.get('/:id', authentificate(), friendController.getById)
 
 // // Ajout d'un ami
-// friendRouter.post('/', authentificate(), friendController.addFriend)
+friendRouter.post('/', authentificate(), friendController.addFriendRequest)
 
 // // // Mise à jour des données personnelles du profil utilisateur
 // // friendRouter.put('/:id', authentificate(), bodyValidation(profilOptionsValidator), friendController.update)

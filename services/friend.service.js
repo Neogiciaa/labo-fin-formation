@@ -18,12 +18,37 @@ const friendService = {
         return friends;
     },
 
+    temporaryRelationExist: async (sender, receiver) => {
+
+        if( receiver == undefined ) {
+            return;
+        }
+
+        else {
+            const isPendingRequest = await db.MTM_friendlistRequest.findOne({
+                where: {
+                    sender: {
+                        [Op.or]: [sender, receiver]
+                    },
+                    receiver: {
+                        [Op.or]: [receiver, sender]
+                    }
+                },
+            });
+
+            console.log("Je suis isPendingRequest -> ", isPendingRequest);
+            return isPendingRequest;
+        }
+    },
+
     addFriendRequest: async (sender, receiver) => {
 
-        await db.MTM_friendlist.create({
+        console.log("sender -> ", sender);
+        console.log("receiver -> ", receiver);
+
+        await db.MTM_friendlistRequest.create({
             sender,
-            receiver,
-            isAccepted
+            receiver
         });
     },
 
