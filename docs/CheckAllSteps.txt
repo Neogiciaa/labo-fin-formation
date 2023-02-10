@@ -18,6 +18,8 @@ Delete -> OK
 
 Implémenter l'autorisation d'intégarir avec TOUS les comptes en tant qu'ADMIN !
 
+Implémenter un horodateur qui check la date de demande d'amis pour autoriser une nouvelle demande ultérieure après un certain délai !!
+
 ----------------------------------------------
 
 FriendList fix bug
@@ -28,7 +30,7 @@ Get By Id ->
 
 AddFriendRequest -> OK
 
-AcceptFriendRequest -> EN COURS -- 2 voie possible : Garder isAccepted dans le model friendlistRequest et s'en servir dans une fonction update sur une route put
+AcceptFriendRequest -> EN COURS -- 2 voie possible : Garder isAccepted dans le model friendlistRequest et s'en servir dans une fonction update sur une route PUT
                                                         -- Probablement la meilleure option --
                                             soit   : Supprimer isAccepted et faire un POST pour appliquer une méthode qui "create" & "destroy" les MTM_friendlist & friendlistRequest 
                                                         -- Problème potentiel avec la seconde option = on ne peut pas avoir 2 routes avec la même requête !! --
