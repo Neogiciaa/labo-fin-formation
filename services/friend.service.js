@@ -18,60 +18,25 @@ const friendService = {
         return friends;
     },
 
-    temporaryRelationExist: async (sender, receiver) => {
+    addFriend: async (user, friend) => {
 
-        if( receiver == undefined ) {
-            return;
-        }
-
-        else {
-            const isPendingRequest = await db.MTM_friendlistRequest.findOne({
-                where: {
-                    sender: {
-                        [Op.or]: [sender, receiver]
-                    },
-                    receiver: {
-                        [Op.or]: [receiver, sender]
-                    }
-                },
-            });
-
-            console.log("Je suis isPendingRequest -> ", isPendingRequest);
-            return isPendingRequest;
-        }
-    },
-
-    addFriendRequest: async (sender, receiver) => {
-
-        console.log("sender -> ", sender);
-        console.log("receiver -> ", receiver);
-
-        await db.MTM_friendlistRequest.create({
-            sender,
-            receiver
-        });
-    },
-
-    acceptFriendRequest: async (receiver, sender) => {
-
-        console.log("receiver -> ", receiver);
-        console.log("sender -> ", sender);
+        console.log("user -> ", user);
+        console.log("newFriend -> ", friend);
 
         await db.MTM_friendlist.create({
-            receiver,
-            sender
+            user,
+            friend
         });
+    },
 
-        await db.MTM_friendlistRequest.destroy({
-            where: {
-                receiver: {
-                    [Op.or] : [receiver, sender]
-                },
-                sender: {
-                    [Op.or] : [sender, receiver]
-                }
-            }
+    updateAnswerFromFuturFriend: async (isAccepted) => {
+        
+        console.log("La réponse du futur ami est: ", isAccepted);
+
+        await db.MTM_friendlist.update({
+            isAccepted
         })
+    },
 
         // let user = await db.MTM_friendlist.findOne({
         //     where: { friendId, userId }
@@ -88,27 +53,41 @@ const friendService = {
         //     .catch((error) => {
         //         console.log(error);
         //     });
+
+    deleteFriend: async (user, friendToDelete) => {
+
+        console.log("user -> ", user);
+        console.log("friendToDelete -> ", friendToDelete);
+
+        await db.MTM_friendlist.destroy({
+            user,
+            friend
+        });
     },
 
-    declineFriendRequest: async (receiver, sender) => {
+    relationExist: async (user, friend) => {
 
-        console.log("receiver -> ", receiver);
-        console.log("sender -> ", sender);
-
-        await db.MTM_friendlistRequest.destroy({
+        const isPendingRequest = await db.MTM_friendlist.findOne({
             where: {
-                receiver: {
-                    [Op.or] : [receiver, sender]
+                user: {
+                    [Op.or]: [user, friend]
                 },
-                sender: {
-                    [Op.or] : [sender, receiver]
+                friend: {
+                    [Op.or]: [friend, user]
                 }
-            }
-        })
-    },
+            },
+        });
 
-    deleteFriend: async (userId, friendId) => {
-        // TODO Supprimer le lien entre deux amis :(
+        console.log("Je suis isPendingRequest AVANT d'être vérifier par les IF -> ", isPendingRequest);
+
+        if (isPendingRequest === null) {
+            console.log("Je suis isPendingRequest = null -> ", isPendingRequest);
+
+            return;
+        }
+
+        console.log("Je suis le status de la demande isAccepted -> ", isPendingRequest.dataValues.isAccepted);
+        return isPendingRequest.dataValues.isAccepted;
     },
 };
 

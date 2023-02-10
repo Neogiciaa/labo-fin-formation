@@ -4,22 +4,19 @@ const authentificate = require('../middlewares/authentificate.middleware');
 const friendRouter = require('express').Router();
 
 // Récupération de tous les utilisateurs de la DB via le controller (recherche et ajout d'un ami)
-friendRouter.get('/', authentificate(), friendController.getAll)
+friendRouter.get('/', authentificate(), friendController.getAll);
 
 // Récupération d'un utilisateur via son id pour afficher chaque utilisateur présent dans la liste d'ami
 // friendRouter.get('/:id', authentificate(), friendController.getById)
 
 // // Ajout d'un ami
-friendRouter.post('/', authentificate(), friendController.addFriendRequest)
+friendRouter.post('/', authentificate(), friendController.addFriendRequest);
 
 // // // Mise à jour des données personnelles du profil utilisateur
 // // friendRouter.put('/:id', authentificate(), bodyValidation(profilOptionsValidator), friendController.update)
 
-// // Accepter les demandes d'amis !
-friendRouter.put('/friend', authentificate(), friendController.acceptFriendRequest)
-
-// // Refuser la demande d'amis !
-friendRouter.put('/friends', authentificate(), friendController.declineFriendRequest)
+// // Répondre à une demande d'amis !
+friendRouter.put('/', authentificate(), friendController.updateAnswerFromFuturFriend);
 
 
 // // Supprimer un ami de sa liste d'ami

@@ -9,12 +9,18 @@ module.exports = (sequelize) => {
 
     const MTM_friendlist = sequelize.define('MTM_friendlist', {
 
-        sender: {
+        user: {
             type: DataTypes.STRING
         },
 
-        receiver: {
+        friend: {
             type: DataTypes.STRING
+        },
+
+        isAccepted: {
+            type: DataTypes.BOOLEAN,
+            default: null,
+            allowNull: true
         }
     },
         {
