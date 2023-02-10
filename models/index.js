@@ -22,18 +22,8 @@ db.House = require('./house.model')(sequelize);
 db.Product = require('./product.model')(sequelize);
 db.HouseToUser = require('./house_user.model')(sequelize);
 db.MTM_friendlist = require('./MTM_friendlist.model')(sequelize);
-db.MTM_friendlistRequest = require('./MTM_friendlistRequest.model')(sequelize);
 
 // Ajout des relations
-
-// - One to Many (User <-> Friend-list) récursive !!
-// db.MTM_friendlist.hasMany(db.User, {
-//     foreignKey: {
-//         allowNull: false
-//     },
-//     onDelete: 'NO ACTION'
-// });
-// db.User.belongsTo(db.MTM_friendlist);
 
 // - Many to Many (House <-> User)
 // db.House.belongsToMany(db.User, { through: 'house_user' });
