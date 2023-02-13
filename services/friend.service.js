@@ -29,33 +29,19 @@ const friendService = {
         });
     },
 
-    updateAnswerFromFuturFriend: async (userId, senderId, isAccepted) => {
+    updateFriendStatus: async (id, data) => {
 
-        const request = await db.MTM_friendlist.findOne(userId, senderId)
-        console.log("La réponse du futur ami (Qui viens du body de la requête) est: ", isAccepted);
+        if (!data) {
+            throw new Error('Data is required');
+        }
 
-        await db.MTM_friendlist.update({
-            isAccepted
-        })
-        console.log("Requete visée par l'update", request);
-        return request;
+        await db.MTM_friendlist.update(data, {
+            where: { id },
+            validate: true,
+            returning: true
+        });
+
     },
-
-    // let user = await db.MTM_friendlist.findOne({
-    //     where: { friendId, userId }
-    // })
-
-    // console.log(" !", user);
-    // user.dataValues.isAccepted = true
-
-    // user.update(isAccepted)
-    //     .then((res) => {
-    //         isAccepted = true;
-    //         console.log("IS ACCEPTED OR NOT ?", isAccepted);
-    //     })
-    //     .catch((error) => {
-    //         console.log(error);
-    //     });
 
     deleteFriend: async (user, friendToDelete) => {
 
@@ -86,41 +72,32 @@ const friendService = {
         if (relationExist === null) {
             console.log("Je suis relationExist = null -> ", relationExist);
 
-            return "Aucune relation trouvée";
+            return false;
         }
+        
+        console.log("RELATION ID ->", relationExist.dataValues.id);
 
-        if (relationExist.dataValues.isAccepted === null) {
-            console.log("Je suis le status isAccepted de la relation = null -> ", relationExist.dataValues.isAccepted);
+        return relationExist.dataValues.id;
 
-            return "Vous avez déja une demande d'ami en cours";
-        }
-
-        if (relationExist.dataValues.isAccepted === true) {
-            console.log("Je suis le status isAccepted de la relation = true -> ", relationExist.dataValues.isAccepted);
-
-            return "Is Accepted es a True donc vous êtes déja amis";
-        }
-
-        if (relationExist.dataValues.isAccepted === false) {
-            console.log("Je suis le status isAccepted de la relation = false -> ", relationExist.dataValues.isAccepted);
-
-            return "Is Accepted es a false";
-        }
+        // if (relationExist.dataValues.isAccepted === null) {
+        //     console.log("Je suis le status isAccepted de la relation = null -> ", relationExist.dataValues.isAccepted);
+    
+        //     return relationExist.dataValues.isAccepted;
+        // }
 
 
-        console.log("Je suis la relation a verifier -> ", relationExist);
-        return relationExist;
+        // if (relationExist.dataValues.isAccepted === true) {
+        //     console.log("Je suis le status isAccepted de la relation = true -> ", relationExist.dataValues.isAccepted);
+
+        //     return "isAccepted est à True donc vous êtes déja amis";
+        // }
+
+        // if (relationExist.dataValues.isAccepted === false) {
+        //     console.log("Je suis le status isAccepted de la relation = false -> ", relationExist.dataValues.isAccepted);
+
+        //     return "isAccepted est à false, invitation refusée";
+        // }
     },
-
-    getFriendsIdFromRequestFriend: async (requestFriendId) => {
-        const friend = await db.MTM_friendlist.findOne({
-            where: {
-                id: requestFriendId
-            }
-        })
-        console.log("Friend ! ", friend);
-        return friend; // renvoie friend.dataValues.friend ??
-    }
 };
 
 module.exports = friendService

@@ -33,92 +33,77 @@ const friendController = {
         }
 
         const answer = await friendService.relationExist(userConnected, receiverId);
-        console.log("Verification si le lien d'amitié existe ou non sur la table", answer, userConnected, receiverId);
 
-        console.log("relationExist is TRUE OR FALSE -> ", answer);
-
-        if (answer === "Aucune relation trouvée") {
-            console.log("AddFriendRequest -- answer = undefined -- Je crée la relation dès la demande", receiverId)
+        if (!answer) {
             await friendService.addFriend(userConnected, receiverId);
             res.send(new SuccessResponse("La demande d'ami a bien été envoyée !", 200));
-
-            return;
         }
 
-        if (answer === "Vous avez déja une demande d'ami en cours") {
-            console.log("Vous avez déjà une demande d'ami en cours");
-            res.send(new ErrorResponse("Vous avez déjà une demande d'ami en cours", 200));
-
-            return;
-        }
-
-        if (answer === "Is Accepted es a True donc vous êtes déja amis") {
-            console.log("Vous êtes déja amis !");
-            res.send(new ErrorResponse("Vous êtes amis", 200));
-
-            return;
+        if (answer) {
+            res.send(new ErrorResponse("Vous avez déja une demande d'ami en cours", 200));
         }
 
         // console.log("AddFriendRequest -- answer = true -- Demande d'ami acceptée"); A verifier si c'est pas mieux dans la methode Update ?
         // res.send(new SuccessResponse("Demande d'ami acceptée", 403)); //TODO capter l'ip du sender, la garder en DB et si plusieurs tentatives = bannissement !!! Bloquer l'accès pendant quelques secondes pour bloquer les requêtes intenpestives!
     },
 
-    updateAnswerFromFuturFriend: async (req, res) => {
+    updateFriendStatus: async (req, res) => {
         const userId = req.user.id
-        const { mail, isAccepted } = req.body;
-        const senderId = await checkIfMailExists(mail);
+        const data = req.validateData;
 
-        // const answer 
+        const senderId = await checkIfMailExists(data.mail);
 
+        // Si checkIfMailExist ne me renvoie rien alors on stop tout
+        if (!checkIfMailExists) {
+            res.send("Personne n'a envoyé d'invitation");
+        }
 
+        // Récupération de l'id (en database) de la relation sur laquelle appliquée la MAJ
+        const relationIdToUpdate = await friendService.relationExist(userId, senderId);
 
-        console.log("Friend Id (Celui qui a envoyé la demande) -> ", senderId);
+        // Si id = 0 ---> Aucune relation existante en DB
+        if (relationIdToUpdate === 0) {
 
-        // if (friendsId === null) {
-        //     console.log("Friend Id === null", friendsId);   // NE SERS PROBABLEMENT PLUS ??
-        //     res.send(new ErrorResponse("Il n'y a pas de demande d'ami en cours, tu n'es pas censé être la !"));
+            res.send("Il n'y a aucune relation existante à mettre à jour");
+        }
+
+        await friendService.updateFriendStatus(relationIdToUpdate, data);
+
+        res.send(new SuccessResponse("Demande d'ami mise a jour", 200));
+
+        // if (relationExist === "Aucune relation trouvée") {
+        //     res.send(new ErrorResponse("Aucune demandes d'amis ne te concernent!"));
+
+        //     return;
         // }
 
-        const relationExist = await friendService.relationExist(userId, senderId);
+        // if (relationExist === "Vous avez déja une demande d'ami en cours") {
+        //     console.log("Status de la demande -> En cours");
+        //     res.send(new ErrorResponse("Status de votre demande -> En cours"));
 
-        if (relationExist === "Aucune relation trouvée") {
-            res.send(new ErrorResponse("Aucune demandes d'amis ne te concernent!"));
+        //     return;
+        // }
 
-            return;
-        }
+        // if (relationExist === "isAccepted est à True donc vous êtes déja amis") {
+        //     console.log("Status de la demande -> Validée");
+        //     res.send(new ErrorResponse("Status de votre demande -> Validée"));
 
-        if (relationExist === "Vous avez déja une demande d'ami en cours") {
-            console.log("Status de la demande -> En cours");
-            res.send(new ErrorResponse("Status de votre demande -> En cours"));
+        //     return;
+        // }
 
-            return;
-        }
+        // if (relationExist === "isAccepted est à false") {
+        //     console.log("Status de la demande -> Rejetée");
+        //     res.send(new SuccessResponse("Status de votre demande -> Rejetée", 200));
 
-        if (relationExist === "Is Accepted es a True donc vous êtes déja amis") {
-            console.log("Status de la demande -> Validée");
-            res.send(new ErrorResponse("Status de votre demande -> Validée"));
+        //     return;
+        // }
 
-            return;
-        }
-
-        if (relationExist === "Is Accepted es a false") {
-            console.log("Status de la demande -> Rejetée");
-            res.send(new SuccessResponse("Status de votre demande -> Rejetée", 200));
-
-            return;
-        }
-
-        await friendService.updateAnswerFromFuturFriend(userId, senderId, isAccepted);
-
-        console.log("Mise a jour de la demande d'ami", userId, senderId, isAccepted)
-        res.send(new SuccessResponse("Demande d'ami mise a jour", 200));
     },
 
     //TODO à faire après avoir résolu "addFriend"
     deleteFriend: async (req, res) => {
         const id = req.user.id;
         console.log('je suis le user connecté', id);
-
 
     }
 
