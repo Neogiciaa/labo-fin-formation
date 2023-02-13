@@ -29,30 +29,33 @@ const friendService = {
         });
     },
 
-    updateAnswerFromFuturFriend: async (isAccepted) => {
-        
-        console.log("La réponse du futur ami est: ", isAccepted);
+    updateAnswerFromFuturFriend: async (userId, senderId, isAccepted) => {
+
+        const request = await db.MTM_friendlist.findOne(userId, senderId)
+        console.log("La réponse du futur ami (Qui viens du body de la requête) est: ", isAccepted);
 
         await db.MTM_friendlist.update({
             isAccepted
         })
+        console.log("Requete visée par l'update", request);
+        return request;
     },
 
-        // let user = await db.MTM_friendlist.findOne({
-        //     where: { friendId, userId }
-        // })
+    // let user = await db.MTM_friendlist.findOne({
+    //     where: { friendId, userId }
+    // })
 
-        // console.log(" !", user);
-        // user.dataValues.isAccepted = true
+    // console.log(" !", user);
+    // user.dataValues.isAccepted = true
 
-        // user.update(isAccepted)
-        //     .then((res) => {
-        //         isAccepted = true;
-        //         console.log("IS ACCEPTED OR NOT ?", isAccepted);
-        //     })
-        //     .catch((error) => {
-        //         console.log(error);
-        //     });
+    // user.update(isAccepted)
+    //     .then((res) => {
+    //         isAccepted = true;
+    //         console.log("IS ACCEPTED OR NOT ?", isAccepted);
+    //     })
+    //     .catch((error) => {
+    //         console.log(error);
+    //     });
 
     deleteFriend: async (user, friendToDelete) => {
 
@@ -67,7 +70,7 @@ const friendService = {
 
     relationExist: async (user, friend) => {
 
-        const isPendingRequest = await db.MTM_friendlist.findOne({
+        const relationExist = await db.MTM_friendlist.findOne({
             where: {
                 user: {
                     [Op.or]: [user, friend]
@@ -78,17 +81,46 @@ const friendService = {
             },
         });
 
-        console.log("Je suis isPendingRequest AVANT d'être vérifier par les IF -> ", isPendingRequest);
+        console.log("Je suis relationExist AVANT d'être vérifier par les IF -> ", relationExist);
 
-        if (isPendingRequest === null) {
-            console.log("Je suis isPendingRequest = null -> ", isPendingRequest);
+        if (relationExist === null) {
+            console.log("Je suis relationExist = null -> ", relationExist);
 
-            return;
+            return "Aucune relation trouvée";
         }
 
-        console.log("Je suis le status de la demande isAccepted -> ", isPendingRequest.dataValues.isAccepted);
-        return isPendingRequest.dataValues.isAccepted;
+        if (relationExist.dataValues.isAccepted === null) {
+            console.log("Je suis le status isAccepted de la relation = null -> ", relationExist.dataValues.isAccepted);
+
+            return "Vous avez déja une demande d'ami en cours";
+        }
+
+        if (relationExist.dataValues.isAccepted === true) {
+            console.log("Je suis le status isAccepted de la relation = true -> ", relationExist.dataValues.isAccepted);
+
+            return "Is Accepted es a True donc vous êtes déja amis";
+        }
+
+        if (relationExist.dataValues.isAccepted === false) {
+            console.log("Je suis le status isAccepted de la relation = false -> ", relationExist.dataValues.isAccepted);
+
+            return "Is Accepted es a false";
+        }
+
+
+        console.log("Je suis la relation a verifier -> ", relationExist);
+        return relationExist;
     },
+
+    getFriendsIdFromRequestFriend: async (requestFriendId) => {
+        const friend = await db.MTM_friendlist.findOne({
+            where: {
+                id: requestFriendId
+            }
+        })
+        console.log("Friend ! ", friend);
+        return friend; // renvoie friend.dataValues.friend ??
+    }
 };
 
 module.exports = friendService

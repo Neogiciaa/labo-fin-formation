@@ -1,5 +1,7 @@
 const friendController = require('../controllers/friend.controller');
 const authentificate = require('../middlewares/authentificate.middleware');
+const bodyValidation = require('../middlewares/body-validation.middleware');
+const { friendMailValidator, friendAnswerValidator } = require('../validators/user.validator');
 
 const friendRouter = require('express').Router();
 
@@ -10,13 +12,13 @@ friendRouter.get('/', authentificate(), friendController.getAll);
 // friendRouter.get('/:id', authentificate(), friendController.getById)
 
 // // Ajout d'un ami
-friendRouter.post('/', authentificate(), friendController.addFriendRequest);
+friendRouter.post('/', authentificate(), bodyValidation(friendMailValidator), friendController.addFriendRequest);
 
 // // // Mise à jour des données personnelles du profil utilisateur
 // // friendRouter.put('/:id', authentificate(), bodyValidation(profilOptionsValidator), friendController.update)
 
 // // Répondre à une demande d'amis !
-friendRouter.put('/', authentificate(), friendController.updateAnswerFromFuturFriend);
+friendRouter.put('/:id', authentificate(), bodyValidation(friendAnswerValidator), friendController.updateAnswerFromFuturFriend);
 
 
 // // Supprimer un ami de sa liste d'ami

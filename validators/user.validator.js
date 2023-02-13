@@ -31,6 +31,15 @@ const profilOptionsValidator = yup.object().shape({
     country: yup.string().min(1).max(50).nullable(true)
 });
 
+
+const friendMailValidator = yup.object().shape({
+    mail: yup.string().trim().required().email().min(1).max(50)
+});
+
+const friendAnswerValidator = yup.object().shape({
+    isAccepted: yup.boolean()
+})
+
 // Feature qui viendra avec l'ajout des commandes/livraisons sur base du panier dans la phase 3 du projet
 
 // const basketValidator = yup.object().shape({
@@ -47,4 +56,6 @@ module.exports = {
     userRegisterValidator,
     userLoginValidator,
     profilOptionsValidator,
+    friendMailValidator,
+    friendAnswerValidator
 };
