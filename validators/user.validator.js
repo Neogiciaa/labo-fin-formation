@@ -37,6 +37,7 @@ const friendMailValidator = yup.object().shape({
 });
 
 const friendAnswerValidator = yup.object().shape({
+    mail: yup.string().trim().required().email().min(1).max(50),
     isAccepted: yup.boolean()
 })
 
