@@ -74,14 +74,14 @@ const friendService = {
 
             return false;
         }
-        
+
         console.log("RELATION ID ->", relationExist.dataValues.id);
 
-        return relationExist.dataValues.id;
+        return relationExist;
 
         // if (relationExist.dataValues.isAccepted === null) {
         //     console.log("Je suis le status isAccepted de la relation = null -> ", relationExist.dataValues.isAccepted);
-    
+
         //     return relationExist.dataValues.isAccepted;
         // }
 

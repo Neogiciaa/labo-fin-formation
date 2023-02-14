@@ -50,6 +50,7 @@ const friendController = {
     updateFriendStatus: async (req, res) => {
         const userId = req.user.id
         const data = req.validateData;
+        const newStatus = data.isAccepted
 
         const senderId = await checkIfMailExists(data.mail);
 
@@ -59,44 +60,27 @@ const friendController = {
         }
 
         // Récupération de l'id (en database) de la relation sur laquelle appliquée la MAJ
-        const relationIdToUpdate = await friendService.relationExist(userId, senderId);
+        const relationExist = await friendService.relationExist(userId, senderId);
+        const relationIdToUpdate = relationExist.dataValues.id
+        const isAcceptedTest = relationExist.dataValues.isAccepted
+
+
+        console.log("relationtoUpdate !!", relationIdToUpdate, isAcceptedTest);
 
         // Si id = 0 ---> Aucune relation existante en DB
         if (relationIdToUpdate === 0) {
-
             res.send("Il n'y a aucune relation existante à mettre à jour");
         }
 
-        await friendService.updateFriendStatus(relationIdToUpdate, data);
+        if (relationIdToUpdate === "1" && isAcceptedTest === null) {
+            console.log("Je peux update car le status es en attente !");
+            await friendService.updateFriendStatus(relationIdToUpdate, data);
 
-        res.send(new SuccessResponse("Demande d'ami mise a jour", 200));
-
-        // if (relationExist === "Aucune relation trouvée") {
-        //     res.send(new ErrorResponse("Aucune demandes d'amis ne te concernent!"));
-
-        //     return;
-        // }
-
-        // if (relationExist === "Vous avez déja une demande d'ami en cours") {
-        //     console.log("Status de la demande -> En cours");
-        //     res.send(new ErrorResponse("Status de votre demande -> En cours"));
-
-        //     return;
-        // }
-
-        // if (relationExist === "isAccepted est à True donc vous êtes déja amis") {
-        //     console.log("Status de la demande -> Validée");
-        //     res.send(new ErrorResponse("Status de votre demande -> Validée"));
-
-        //     return;
-        // }
-
-        // if (relationExist === "isAccepted est à false") {
-        //     console.log("Status de la demande -> Rejetée");
-        //     res.send(new SuccessResponse("Status de votre demande -> Rejetée", 200));
-
-        //     return;
-        // }
+            if (newStatus === true) {
+                res.send(new SuccessResponse("La demande d'ami a été acceptée", 200));
+            }
+            res.send(new SuccessResponse("La demande d'ami a été refusée", 200));
+        }
 
     },
 

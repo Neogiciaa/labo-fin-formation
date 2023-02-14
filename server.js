@@ -26,7 +26,7 @@ db.sequelize.authenticate()
 
 // - Sync avec la base de donnée (necessaire les droits DDL)
 if (process.env.NODE_ENV === 'development') {
-    // db.sequelize.sync({ alter: { drop: false } });  // A dé-commenter pour créer les tables direct au lancement du serv !
+    //   db.sequelize.sync({ alter: { drop: false } });  // A dé-commenter pour créer les tables direct au lancement du serv !
 }
 
 // Création de la Web API
