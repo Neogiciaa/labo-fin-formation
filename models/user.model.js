@@ -89,10 +89,5 @@ module.exports = (sequelize) => {
         timestamps: true
     });
 
-    // Définir les relations ! (Many to Many)
-    User.belongsToMany(User, { as: "user", through: 'MTM_friendlist', foreignKey: "userId" });
-    User.belongsToMany(User, { as: "friend", through: 'MTM_friendlist', foreignKey: "friendId" });
-
-
     return User;
 };

@@ -25,6 +25,10 @@ db.MTM_friendlist = require('./MTM_friendlist.model')(sequelize);
 
 // Ajout des relations
 
+// Définir les relations ! (Many to Many)
+db.User.belongsToMany(db.User, { as: "user", through: 'MTM_friendlist', foreignKey: "user" });
+db.User.belongsToMany(db.User, { as: "friend", through: 'MTM_friendlist', foreignKey: "friend" });
+
 // - Many to Many (House <-> User)
 // db.House.belongsToMany(db.User, { through: 'house_user' });
 // db.User.belongsToMany(db.House, { through: 'house_user' });

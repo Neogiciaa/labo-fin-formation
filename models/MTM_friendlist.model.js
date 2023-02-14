@@ -9,6 +9,12 @@ module.exports = (sequelize) => {
 
     const MTM_friendlist = sequelize.define('MTM_friendlist', {
 
+        id: {
+            type: DataTypes.BIGINT(),
+            autoIncrement: true,
+            primaryKey: true
+        },
+
         user: {
             type: DataTypes.STRING
         },
