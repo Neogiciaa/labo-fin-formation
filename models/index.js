@@ -33,5 +33,6 @@ db.House.belongsToMany(db.User, { as: "houseId", through: 'MTM_house_user', fore
 db.User.belongsToMany(db.House, { as: "userId", through: 'MTM_house_user', foreignKey: "userId" });
 
 
+
 // Export de l'objet "db"
 module.exports = db;
