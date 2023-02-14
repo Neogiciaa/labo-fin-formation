@@ -71,33 +71,6 @@ const friendController = {
 
         res.send(new SuccessResponse("Demande d'ami mise a jour", 200));
 
-        // if (relationExist === "Aucune relation trouvée") {
-        //     res.send(new ErrorResponse("Aucune demandes d'amis ne te concernent!"));
-
-        //     return;
-        // }
-
-        // if (relationExist === "Vous avez déja une demande d'ami en cours") {
-        //     console.log("Status de la demande -> En cours");
-        //     res.send(new ErrorResponse("Status de votre demande -> En cours"));
-
-        //     return;
-        // }
-
-        // if (relationExist === "isAccepted est à True donc vous êtes déja amis") {
-        //     console.log("Status de la demande -> Validée");
-        //     res.send(new ErrorResponse("Status de votre demande -> Validée"));
-
-        //     return;
-        // }
-
-        // if (relationExist === "isAccepted est à false") {
-        //     console.log("Status de la demande -> Rejetée");
-        //     res.send(new SuccessResponse("Status de votre demande -> Rejetée", 200));
-
-        //     return;
-        // }
-
     },
 
     //TODO à faire après avoir résolu "addFriend"

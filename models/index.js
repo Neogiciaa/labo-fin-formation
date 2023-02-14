@@ -20,7 +20,7 @@ db.sequelize = sequelize;
 db.User = require('./user.model')(sequelize);
 db.House = require('./house.model')(sequelize);
 db.Product = require('./product.model')(sequelize);
-db.HouseToUser = require('./house_user.model')(sequelize);
+db.MTM_house_user = require('./MTM_house_user.model')(sequelize);
 db.MTM_friendlist = require('./MTM_friendlist.model')(sequelize);
 
 // Ajout des relations
@@ -29,9 +29,8 @@ db.MTM_friendlist = require('./MTM_friendlist.model')(sequelize);
 db.User.belongsToMany(db.User, { as: "user", through: 'MTM_friendlist', foreignKey: "user" });
 db.User.belongsToMany(db.User, { as: "friend", through: 'MTM_friendlist', foreignKey: "friend" });
 
-// - Many to Many (House <-> User)
-// db.House.belongsToMany(db.User, { through: 'house_user' });
-// db.User.belongsToMany(db.House, { through: 'house_user' });
+db.House.belongsToMany(db.User, { as: "houseId", through: 'MTM_house_user', foreignKey: 'houseId' });
+db.User.belongsToMany(db.House, { as: "userId", through: 'MTM_house_user', foreignKey: "userId" });
 
 
 // Export de l'objet "db"

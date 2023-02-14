@@ -2,33 +2,33 @@ const { Sequelize, DataTypes, ModelCtor } = require('sequelize');
 
 
 /**
- * Model HouseToUser
+ * Model MTM_house-user
  * @param {Sequelize} sequelize 
  * @returns {ModelCtor<any>}
  */
 
 module.exports = (sequelize) => {
 
-    const HouseToUser = sequelize.define('house_user', {
+    const MTM_house_user = sequelize.define('MTM_house_user', {
 
         hasAdmin: {
-            type: DataTypes.STRING(50),
-            required: true
+            type: DataTypes.BIGINT(),
+            required: true,
         },
 
         hasResponsable: {
-            type: DataTypes.STRING(50),
+            type: DataTypes.BIGINT(),
             allowNull: true
         },
 
         hasGuest: {
-            type: DataTypes.STRING(50),
+            type: DataTypes.BIGINT(),
             allowNull: true
         },
 
     }, {
-        tableName: 'house_user',
+        tableName: 'MTM_house_user',
     });
 
-    return HouseToUser;
+    return MTM_house_user;
 };

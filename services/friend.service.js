@@ -42,7 +42,7 @@ const friendService = {
         });
 
     },
-
+    //TODO A FAIRE !
     deleteFriend: async (user, friendToDelete) => {
 
         console.log("user -> ", user);
@@ -78,25 +78,6 @@ const friendService = {
         console.log("RELATION ID ->", relationExist.dataValues.id);
 
         return relationExist.dataValues.id;
-
-        // if (relationExist.dataValues.isAccepted === null) {
-        //     console.log("Je suis le status isAccepted de la relation = null -> ", relationExist.dataValues.isAccepted);
-    
-        //     return relationExist.dataValues.isAccepted;
-        // }
-
-
-        // if (relationExist.dataValues.isAccepted === true) {
-        //     console.log("Je suis le status isAccepted de la relation = true -> ", relationExist.dataValues.isAccepted);
-
-        //     return "isAccepted est à True donc vous êtes déja amis";
-        // }
-
-        // if (relationExist.dataValues.isAccepted === false) {
-        //     console.log("Je suis le status isAccepted de la relation = false -> ", relationExist.dataValues.isAccepted);
-
-        //     return "isAccepted est à false, invitation refusée";
-        // }
     },
 };
 

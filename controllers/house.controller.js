@@ -1,7 +1,7 @@
 const { ErrorResponse } = require('../api-responses/error-response');
 const { SuccessResponse } = require('../api-responses/success-response');
 const houseService = require('../services/house.service');
-const { houseToUserService } = require('../services/house_user.service');
+const house_userService = require('../services/house_user.service');
 
 const houseController = {
 
@@ -31,13 +31,20 @@ const houseController = {
     },
 
     add: async (req, res) => {
+        // Récupération de l'id du user connecté
+        const userConnected = req.user.id;
+
         // Récupération des données validées par le middleware "bodyValidation"
         const data = req.validateData;
 
         // Ajout dans la DB
         const houseCreated = await houseService.add(data);
+        
+        // Récupération de l'id de la maison qui vient d'être crée
+        const houseId = houseCreated.id;
 
-        const houseHasAdmin = await houseToUserService.add(req.user.id);
+        // Créer le lien entre la maison fraîchement crée et son utilisateur
+        await house_userService.add(userConnected, houseId);
 
         // Envoi de la réponse
         res.location('api/house/' + houseCreated._id);

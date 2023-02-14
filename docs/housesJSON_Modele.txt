@@ -1,0 +1,10 @@
+-- House 1 --
+
+{
+  	"name": "Maison de Junior",
+	"street": "rue Mike",
+  	"number": 172,
+  	"postalCode": 5000,
+  	"city": "Namur",
+  	"country": "Belgium"
+}
