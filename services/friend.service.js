@@ -1,6 +1,7 @@
 const db = require('../models');
 const { Op } = require('sequelize');
 const { UserDTO } = require('../dto/user.dto');
+const moment = require('moment/moment');
 
 const friendService = {
 
@@ -44,6 +45,9 @@ const friendService = {
 
     deleteFriend: async (relationIdToUpdate) => {
 
+        const today = moment().format('DD/MM/YYYY');
+        console.log("Nous sommes le: ", today);
+
         console.log("RelationIDtoupdate", relationIdToUpdate);
 
         await db.MTM_friendlist.destroy({
@@ -77,26 +81,7 @@ const friendService = {
         console.log("RELATION ID ->", relationExist.dataValues.id);
 
         return relationExist;
-
-        // if (relationExist.dataValues.isAccepted === null) {
-        //     console.log("Je suis le status isAccepted de la relation = null -> ", relationExist.dataValues.isAccepted);
-
-        //     return relationExist.dataValues.isAccepted;
-        // }
-
-
-        // if (relationExist.dataValues.isAccepted === true) {
-        //     console.log("Je suis le status isAccepted de la relation = true -> ", relationExist.dataValues.isAccepted);
-
-        //     return "isAccepted est à True donc vous êtes déja amis";
-        // }
-
-        // if (relationExist.dataValues.isAccepted === false) {
-        //     console.log("Je suis le status isAccepted de la relation = false -> ", relationExist.dataValues.isAccepted);
-
-        //     return "isAccepted est à false, invitation refusée";
-        // }
-    },
+    }
 };
 
 module.exports = friendService

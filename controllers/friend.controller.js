@@ -41,14 +41,12 @@ const friendController = {
         // Récupération de la relation d'ami existante en db
         const answer = await friendService.relationExist(userConnected, receiverId);
 
-        // console.log("Status de la relation -> ", requestStatus);
-
         if (!answer) {
             await friendService.addFriend(userConnected, receiverId);
             res.send(new SuccessResponse("La demande d'ami a bien été envoyée !", 200));
         }
 
-        // Récupération de l'état du booléen
+        // Récupération de l'état du booléen de la demande d'ami ciblée
         const requestStatus = answer.dataValues.isAccepted
 
         if (answer && requestStatus === null) {
@@ -60,9 +58,8 @@ const friendController = {
         }
 
         if (answer && requestStatus === false) {
-            res.send(new ErrorResponse("Une demande d'ami précédente a été rejetée, veuillez réessayer dans..."))
+            res.send(new ErrorResponse("Une demande d'ami précédente a été rejetée, veuillez réessayer plus tard"))
         }
-
         // res.send(new SuccessResponse("Demande d'ami acceptée", 403)); //TODO capter l'ip du sender, la garder en DB et si plusieurs tentatives = bannissement !!! Bloquer l'accès pendant quelques secondes pour bloquer les requêtes intenpestives!
     },
 
@@ -97,6 +94,15 @@ const friendController = {
 
             res.send(new SuccessResponse("La demande d'ami a été acceptée", 200));
         }
+
+        if (relationIdToUpdate === "1" && isAcceptedTest === null && newStatus === false) {
+            console.log("Je refuse la demande d'ami");
+            await friendService.updateFriendStatus(relationIdToUpdate, data);
+
+            res.send(new SuccessResponse("La demande d'ami a été refusée", 200));
+        }
+
+
 
         if (relationIdToUpdate === "1" && isAcceptedTest === true && newStatus === false) {
             await friendService.deleteFriend(relationIdToUpdate)
