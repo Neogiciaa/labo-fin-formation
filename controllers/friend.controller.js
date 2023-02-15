@@ -31,6 +31,12 @@ const friendController = {
 
             return;
         }
+        // Si le user connecté essaie de s'envoyer une demande d'ami alors on stop tout
+        if (receiverId === userConnected) {
+            res.send(new ErrorResponse("Vous ne pouvez pas vous ajouter en ami vous-même"));
+
+            return;
+        }
 
         const answer = await friendService.relationExist(userConnected, receiverId);
 
@@ -81,6 +87,7 @@ const friendController = {
             }
             res.send(new SuccessResponse("La demande d'ami a été refusée", 200));
         }
+        res.send(new ErrorResponse("Tu n'a rien a faire ici petit malin :) "))
 
     },
 
