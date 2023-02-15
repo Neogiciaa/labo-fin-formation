@@ -33,6 +33,7 @@ Autres
 - yup
 - morgan
 - chalk (version 4)
+- moment
 
 ## Outils de dev
 - nodemon
