@@ -1,21 +1,20 @@
 const db = require('../models');
 const { Op } = require('sequelize');
+const { UserDTO } = require('../dto/user.dto');
 
 const friendService = {
 
-    getAll: async (sender, receiver) => {
-        console.log("Sender ! ", sender);
-        const friends = await db.MTM_friendlist.findOne({
-            where: {
-                sender: {
-                    [Op.or]: [sender, receiver]
-                },
-                receiver: {
-                    [Op.or]: [receiver, sender]
-                }
-            }
-        })
-        return friends;
+    getAll: async (user) => {
+        // uUtiliser User pour chercher les relations qui lui appartiennent !
+
+        // Récupérer des amis
+        const friend = await db.MTM_friendlist.findAll();
+
+        // Envoie des données dans un objet DTO
+        return {
+            friends: friend.map(friend => new UserDTO(friend))
+        }
+
     },
 
     addFriend: async (user, friend) => {
@@ -43,14 +42,14 @@ const friendService = {
 
     },
 
-    deleteFriend: async (user, friendToDelete) => {
+    deleteFriend: async (relationIdToUpdate) => {
 
-        console.log("user -> ", user);
-        console.log("friendToDelete -> ", friendToDelete);
+        console.log("RelationIDtoupdate", relationIdToUpdate);
 
         await db.MTM_friendlist.destroy({
-            user,
-            friend
+            where: {
+                id: relationIdToUpdate
+            }
         });
     },
 

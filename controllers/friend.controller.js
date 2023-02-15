@@ -6,13 +6,12 @@ const friendService = require('../services/friend.service');
 const friendController = {
 
     getAll: async (req, res) => {
+        const userConnected = req.user.id;
+        console.log("User qui es connecté", userConnected);
 
-        const senderId = req.user.id;
-        console.log("User qui es connecté !", senderId);
+        const friends = await friendService.getAll(userConnected);
 
-        const receiverId = await friendService.getAll(senderId)
-        console.log("DATAS SUR LE COMPTE AJOUTER EN AMI ", receiverId);
-        return receiverId;
+        res.json(new SuccessResponse(friends), 200)
     },
 
     addFriendRequest: async (req, res) => {
@@ -92,26 +91,20 @@ const friendController = {
             res.send("Il n'y a aucune relation existante à mettre à jour");
         }
 
-        if (relationIdToUpdate === "1" && isAcceptedTest === null) {
-            console.log("Je peux update car le status es en attente !");
+        if (relationIdToUpdate === "1" && isAcceptedTest === null && newStatus === true) {
+            console.log("Je peux accepter car le status es en attente et l'user accepte !");
             await friendService.updateFriendStatus(relationIdToUpdate, data);
 
-            if (newStatus === true) {
-                res.send(new SuccessResponse("La demande d'ami a été acceptée", 200));
-            }
-            res.send(new SuccessResponse("La demande d'ami a été refusée", 200));
+            res.send(new SuccessResponse("La demande d'ami a été acceptée", 200));
         }
-        res.send(new ErrorResponse("Tu n'a rien a faire ici petit malin :) "))
 
-    },
+        if (relationIdToUpdate === "1" && isAcceptedTest === true && newStatus === false) {
+            await friendService.deleteFriend(relationIdToUpdate)
 
-    //TODO à faire après avoir résolu "addFriend"
-    deleteFriend: async (req, res) => {
-        const id = req.user.id;
-        console.log('je suis le user connecté', id);
-
+            res.send(new SuccessResponse("L'ami a été viré comme un nanard"))
+        }
+        res.send(new ErrorResponse("Tu n'a rien a faire ici !"))
     }
-
 };
 
 module.exports = friendController;
