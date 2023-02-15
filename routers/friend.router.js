@@ -14,10 +14,6 @@ friendRouter.post('/', authentificate(), bodyValidation(friendMailValidator), fr
 // Répondre à une demande d'amis !
 friendRouter.put('/', authentificate(), bodyValidation(friendAnswerValidator), friendController.updateFriendStatus);
 
-//TODO à décommenter quand ça sera implémenter
-// Supprimer un ami de sa liste d'ami
-// friendRouter.delete('/friend/:id', authentificate(), friendController.deleteFriend);
-
 // Route ADMIN : suppression d'un compte utilisateur de l'application globable
 // friendRouter.delete(':id', authentificateHasAdmin(), friendController.delete); //TODO vérifier la logique d'accès. Renvoie actuellement une 404 native lors d'un test
 
