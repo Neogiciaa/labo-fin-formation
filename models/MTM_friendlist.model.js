@@ -27,7 +27,12 @@ module.exports = (sequelize) => {
             type: DataTypes.BOOLEAN,
             default: null,
             allowNull: true
+        },
+
+        date: {
+            type: DataTypes.DATE
         }
+
     },
         {
             tableName: 'MTM_friendlist',
