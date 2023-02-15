@@ -9,6 +9,7 @@ class HouseDTO {
         this.postalCode = data.postalCode;
         this.city = data.city;
         this.country = data.country;
+        this.mainHouse = data.mainHouse
     }
 };
 

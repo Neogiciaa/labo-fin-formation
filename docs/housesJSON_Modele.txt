@@ -6,5 +6,22 @@
   	"number": 172,
   	"postalCode": 5000,
   	"city": "Namur",
-  	"country": "Belgium"
+  	"country": "Belgium",
+	"hasAdmin": 1
 }
+
+
+-- House 2 --
+
+{
+    "name": "Maison de Mike",
+	"street": "rue Mike",
+  	"number": 11,
+  	"postalCode": 5000,
+  	"city": "Namur",
+  	"country": "Belgium",
+	"hasAdmin": 1
+}
+
+-- House 3 --
+

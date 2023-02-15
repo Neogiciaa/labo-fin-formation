@@ -47,6 +47,12 @@ module.exports = (sequelize) => {
             allowNull: true
         },
 
+        mainHouse: {
+            type: DataTypes.BOOLEAN,
+            allowNull: true,
+            defaultValue: false
+        }
+
     }, {
         tableName: 'house',
         timestamps: true

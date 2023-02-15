@@ -5,8 +5,12 @@ const houseService = {
 
     getAll: async () => {
         // Récupération des maisons
-        const houseDTO = await db.House.findAll();
-        return houseDTO;
+        const house = await db.House.findAll();
+
+        // Envoi des données dans un objet DTO
+        return {
+            houses: house.map(house => new HouseDTO(house))
+        }
     },
 
     getById: async (id) => {
@@ -61,7 +65,7 @@ const houseService = {
                 console.log(error);
             });
 
-        // Si le user n'existe pas, stopper la fonction
+        // Si la maison n'existe pas, stopper la fonction
         if (houseToDelete == 0) {
             return null;
         }

@@ -1,6 +1,18 @@
 const db = require('../models');
+const { Op } = require('sequelize');
 
-const roleService = {
+const house_userService = {
+
+    getAll: async(user) => {
+        // Récupération de toutes les maisons appartenant à l'utilisateur
+        console.log("user ! ", user);
+
+        const housesId = await db.MTM_house_user.findAll({
+            where: { user }
+        })
+
+        return housesId;
+    },
 
     add: async(userId, houseId) => {
 
@@ -17,31 +29,28 @@ const roleService = {
 
     },
 
-    // relationExist: async (user, house) => {
+    checkIfGotOtherOne: async (userId) => {
+        //TODO Vérifier si je filtre bien la recherche via le userId !!
+        const getAllHouseOfUserConnected = await db.MTM_house_user.findAll({
+            where: {
+                userId
+            }
+        });
 
-    //     const relationExist = await db.MTM_house_user.findOne({
-    //         where: {
-    //             user: {
-    //                 [Op.or]: [user, house]
-    //             },
-    //             friend: {
-    //                 [Op.or]: [house, user]
-    //             }
-    //         },
-    //     });
+        return getAllHouseOfUserConnected
+    },
+    //TODO TO FIX !!!
+    updateMainHouseStatus: async (houseId, mainHouse) => {
 
-    //     console.log("Je suis relationExist AVANT d'être vérifier par les IF -> ", relationExist);
+        mainHouse = true;
 
-    //     if (relationExist === null) {
-    //         console.log("Je suis relationExist = null -> ", relationExist);
+        await db.House.update(mainHouse, {
+            where: { houseId },
+            validate: true,
+            returning: true
+        })
+    }
 
-    //         return false;
-    //     }
-        
-    //     console.log("RELATION ID ->", relationExist.dataValues.id);
-
-    //     return relationExist.dataValues.id;
-    // },
 }
 
-module.exports = roleService;
+module.exports = house_userService;

@@ -18,3 +18,13 @@
 	"mail": "stephen@gmail.com",
 	"password": "Stephen1234="
 }
+
+-- User 3 --
+
+{
+	"pseudo": "pupuce",
+	"lastName": "Bombasee",
+	"firstName": "Jessica",
+	"mail": "jessica@gmail.com",
+	"password": "Jessica1234="
+}

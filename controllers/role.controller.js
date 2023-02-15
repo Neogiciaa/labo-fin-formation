@@ -1,7 +1,7 @@
 const { ErrorResponse } = require('../api-responses/error-response');
 const { SuccessResponse } = require('../api-responses/success-response');
 const roleService = require('../services/house_user.service');
-//TODO EST-CE UTILE ???
+
 const house_userController = {
 
     add: async(req, res) => {

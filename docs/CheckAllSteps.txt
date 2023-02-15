@@ -30,18 +30,23 @@ Get By Id ->
 
 AddFriendRequest -> OK
 
-AcceptFriendRequest -> EN COURS -- 2 voie possible : Garder isAccepted dans le model friendlistRequest et s'en servir dans une fonction update sur une route PUT
-                                                        -- Probablement la meilleure option --
-                                            soit   : Supprimer isAccepted et faire un POST pour appliquer une méthode qui "create" & "destroy" les MTM_friendlist & friendlistRequest 
-                                                        -- Problème potentiel avec la seconde option = on ne peut pas avoir 2 routes avec la même requête !! --
+AcceptFriendRequest -> OK
 
-DeclineFriendRequest -> EN COURS
+DeclineFriendRequest -> OK
 
-DeleteFriend ->
+DeleteFriend -> EN COURS
 
+----------------------------------------------
 
+House fix bug
 
+Get All -> OK
 
+Get By Id -> Ok sur l'ID de la maison qui est égale à notre ID --> Problème d'accès aux autres maisons que je possède. TODO -> Implémenter l'autorisation d'accèder à d'autres maisons via les ROLES.
 
-Delete -> OK
+Add -> OK
+
+Update -> OK mais même problème que Get By Id --> Impossible d'update mes autres maisons
+
+Delete -> OK mais même problème que les autres
 
