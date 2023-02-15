@@ -48,7 +48,6 @@ const authController = {
         }
         catch (error) {
             res.status(500);
-            console.log("hyfuaezzeazeazygeazaz");
         }
     }
 };

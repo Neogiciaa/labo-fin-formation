@@ -26,6 +26,7 @@ const friendController = {
 
         console.log("mail vérifié = ", mail);
 
+        // Si l'utilisateur qu'on essaie de demander en ami n'existe pas alors on stop tout
         if (!receiverId) {
             res.send(new ErrorResponse("L'utiliseur n'existe pas !", 404));
 
@@ -38,18 +39,31 @@ const friendController = {
             return;
         }
 
+        // Récupération de la relation d'ami existante en db
         const answer = await friendService.relationExist(userConnected, receiverId);
+
+        // console.log("Status de la relation -> ", requestStatus);
 
         if (!answer) {
             await friendService.addFriend(userConnected, receiverId);
             res.send(new SuccessResponse("La demande d'ami a bien été envoyée !", 200));
         }
 
-        if (answer) {
+        // Récupération de l'état du booléen
+        const requestStatus = answer.dataValues.isAccepted
+
+        if (answer && requestStatus === null) {
             res.send(new ErrorResponse("Vous avez déja une demande d'ami en cours", 200));
         }
 
-        // console.log("AddFriendRequest -- answer = true -- Demande d'ami acceptée"); A verifier si c'est pas mieux dans la methode Update ?
+        if (answer && requestStatus === true) {
+            res.send(new ErrorResponse("Vous êtes déja amis !"))
+        }
+
+        if (answer && requestStatus === false) {
+            res.send(new ErrorResponse("Une demande d'ami précédente a été rejetée, veuillez réessayer dans..."))
+        }
+
         // res.send(new SuccessResponse("Demande d'ami acceptée", 403)); //TODO capter l'ip du sender, la garder en DB et si plusieurs tentatives = bannissement !!! Bloquer l'accès pendant quelques secondes pour bloquer les requêtes intenpestives!
     },
 
