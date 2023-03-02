@@ -18,7 +18,6 @@ const generateJWT = ({ id, mail }) => {
                 return;
             }
             resolve(token);
-            console.log("Generated Token -> ", token);
         });
     });
 };
