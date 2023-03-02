@@ -7,8 +7,6 @@ const friendController = {
 
     getAll: async (req, res) => {
         const userConnected = req.user.id;
-        console.log("User qui es connecté", userConnected);
-
         const friends = await friendService.getAll(userConnected);
 
         res.json(new SuccessResponse(friends), 200)
@@ -17,13 +15,10 @@ const friendController = {
     addFriendRequest: async (req, res) => {
         // Récupération de l'id du user connecté
         const userConnected = req.user.id;
-        console.log('je suis le user connecté', userConnected);
 
         // Récupération du mail recherché par le user 
         const { mail } = req.body;
         const receiverId = await checkIfMailExists(mail);
-
-        console.log("mail vérifié = ", mail);
 
         // Si l'utilisateur qu'on essaie de demander en ami n'existe pas alors on stop tout
         if (!receiverId) {
@@ -60,14 +55,14 @@ const friendController = {
         if (answer && requestStatus === false) {
             res.send(new ErrorResponse("Une demande d'ami précédente a été rejetée, veuillez réessayer plus tard"))
         }
-        // res.send(new SuccessResponse("Demande d'ami acceptée", 403)); //TODO capter l'ip du sender, la garder en DB et si plusieurs tentatives = bannissement !!! Bloquer l'accès pendant quelques secondes pour bloquer les requêtes intenpestives!
+
+        res.send(new ErrorResponse("Tu n'a rien a faire ici ! #BanIncoming"));
+        // Méthode de bannissement ici :D
     },
 
     updateFriendStatus: async (req, res) => {
         const userId = req.user.id
         const data = req.validateData;
-        const newStatus = data.isAccepted
-
         const senderId = await checkIfMailExists(data.mail);
 
         // Si checkIfMailExist ne me renvoie rien alors on stop tout
@@ -75,41 +70,50 @@ const friendController = {
             res.send("Personne n'a envoyé d'invitation");
         }
 
-        // Récupération de l'id (en database) de la relation sur laquelle appliquée la MAJ
+        // Récupération de la relation d'ami existante en db
         const relationExist = await friendService.relationExist(userId, senderId);
-        const relationIdToUpdate = relationExist.dataValues.id
-        const isAcceptedTest = relationExist.dataValues.isAccepted
+        const newStatus = data.isAccepted
 
-
-        console.log("relationtoUpdate !!", relationIdToUpdate, isAcceptedTest);
-
-        // Si id = 0 ---> Aucune relation existante en DB
-        if (relationIdToUpdate === 0) {
+        // Si relationIdToUpdate = 0 -> Aucune relation existante en DB
+        if (!relationExist) {
             res.send("Il n'y a aucune relation existante à mettre à jour");
+
+            return;
         }
 
-        if (relationIdToUpdate === "1" && isAcceptedTest === null && newStatus === true) {
-            console.log("Je peux accepter car le status es en attente et l'user accepte !");
-            await friendService.updateFriendStatus(relationIdToUpdate, data);
+        const relationIdToUpdate = relationExist.dataValues.id;
+        const isAccepted = relationExist.dataValues.isAccepted
 
+        // Si la relation existe, que son isAccepted es a "null" et que le nouveau status es "true" -> Update la relation
+        if (isAccepted === null && newStatus === true) {
+
+            await friendService.updateFriendStatus(relationIdToUpdate, data);
             res.send(new SuccessResponse("La demande d'ami a été acceptée", 200));
+
+            return;
         }
 
-        if (relationIdToUpdate === "1" && isAcceptedTest === null && newStatus === false) {
-            console.log("Je refuse la demande d'ami");
+        // Si la relation existe, que son isAccepted es a "null" et que le nouveau status es "false" -> Update la relation
+        if (isAccepted === null && newStatus === false) {
             await friendService.updateFriendStatus(relationIdToUpdate, data);
+            await friendService.setTimeOut(relationIdToUpdate);
 
             res.send(new SuccessResponse("La demande d'ami a été refusée", 200));
+
+            return;
         }
 
+        // Si la relation existe et que son isAccepted es a "true" et que le nouveau status es "false" -> Update la relation
+        if (isAccepted === true && newStatus === false) {
+            await friendService.updateFriendStatus(relationIdToUpdate, data);
+            await friendService.setTimeOut(relationIdToUpdate);
 
+            res.send(new SuccessResponse("L'ami a été viré comme un nanard"));
 
-        if (relationIdToUpdate === "1" && isAcceptedTest === true && newStatus === false) {
-            await friendService.deleteFriend(relationIdToUpdate)
-
-            res.send(new SuccessResponse("L'ami a été viré comme un nanard"))
+            return;
         }
-        res.send(new ErrorResponse("Tu n'a rien a faire ici !"))
+        res.send(new ErrorResponse("Tu n'a rien a faire ici ! #BanIncoming"));
+        // Méthode de bannissement ici :D
     }
 };
 

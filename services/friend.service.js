@@ -1,7 +1,8 @@
 const db = require('../models');
-const { Op } = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 const { UserDTO } = require('../dto/user.dto');
-const moment = require('moment/moment');
+
+
 
 const friendService = {
 
@@ -19,14 +20,11 @@ const friendService = {
     },
 
     addFriend: async (user, friend) => {
-
-        console.log("user -> ", user);
-        console.log("newFriend -> ", friend);
-
         await db.MTM_friendlist.create({
             user,
             friend
         });
+
     },
 
     updateFriendStatus: async (id, data) => {
@@ -40,21 +38,25 @@ const friendService = {
             validate: true,
             returning: true
         });
-
     },
 
     deleteFriend: async (relationIdToUpdate) => {
-
-        const today = moment().format('DD/MM/YYYY');
-        console.log("Nous sommes le: ", today);
-
-        console.log("RelationIDtoupdate", relationIdToUpdate);
 
         await db.MTM_friendlist.destroy({
             where: {
                 id: relationIdToUpdate
             }
         });
+    },
+
+    setTimeOut: async (relationIdToUpdate) => {
+        const oneMinute = 60000;
+        const time = oneMinute * 0.5 // 30s pour tests !
+        setTimeout(async () => {
+            await friendService.deleteFriend(relationIdToUpdate);
+        }, time);
+
+        return;
     },
 
     relationExist: async (user, friend) => {
@@ -70,15 +72,10 @@ const friendService = {
             },
         });
 
-        console.log("Je suis relationExist AVANT d'être vérifier par les IF -> ", relationExist);
-
         if (relationExist === null) {
-            console.log("Je suis relationExist = null -> ", relationExist);
 
             return false;
         }
-
-        console.log("RELATION ID ->", relationExist.dataValues.id);
 
         return relationExist;
     }

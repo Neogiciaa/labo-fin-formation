@@ -42,7 +42,6 @@ const userService = {
     update: async (id, data) => {
 
         if (!data) {
-            console.log("DATAS dans le UserService -> ", data);
             throw new Error('Data is required !');
         };
 
@@ -113,7 +112,6 @@ const userService = {
         });
 
         if (user == null) {
-            console.log("L'utilisateur recherché n'existe pas !");
             return;
 
         } else {
