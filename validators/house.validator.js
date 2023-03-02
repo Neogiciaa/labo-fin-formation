@@ -7,7 +7,7 @@ const houseValidator = yup.object().shape({
     postalCode: yup.string().min(1).max(10).nullable(true),
     city: yup.string().trim().min(1).max(100).nullable(true),
     country: yup.string().min(1).max(50).nullable(true),
-    mainHouse: yup.boolean().nullable(true)
+    mainHouse: yup.boolean().nullable(true) //TODO si la personne coche cette case = l'ancienne maison principale ne l'est plus et cette nouvelle maison devient la nouvelle résidence principale
 
 });
 

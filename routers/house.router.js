@@ -7,7 +7,7 @@ const authentificate = require('../middlewares/authentificate.middleware');
 const houseRouter = require('express').Router();
 
 // TODO Récupération de toutes les maisons de l'app. Utile pour les phases de test mais peut-être à supprimer pour le build finale ??
-houseRouter.get('/', authentificate(), houseController.getAll)
+houseRouter.get('/', authentificate(), houseController.getAllByUser)
 
 // Récupération des maisons via leur id (lié au compte utilisateur) afin d'afficher sa liste de maison
 houseRouter.get('/:id', authentificate(), houseController.getById)

@@ -7,6 +7,11 @@ const houseService = {
         // Récupération des maisons
         const house = await db.House.findAll();
 
+        if (!house) {
+
+            return null;
+        }
+
         // Envoi des données dans un objet DTO
         return {
             houses: house.map(house => new HouseDTO(house))
@@ -18,6 +23,7 @@ const houseService = {
         const house = await db.House.findByPk(id);
 
         if (!house) {
+
             return null;
         }
 
@@ -55,6 +61,15 @@ const houseService = {
         return new HouseDTO(house);
     },
 
+    updateMainHouseStatus: async (houseId) => {
+    
+        db.House.findByPk(houseId).then(async(house) => {
+            if (house) {
+                await house.update({mainHouse : true})
+            }
+        })
+    },
+    //TODO Si la maison a bien été supprimé et qu'elle était considérée comme la Résidence Principale, il faut transférer ce status à la prochaine maison sur la liste
     delete: async (id) => {
         // Récupération de l'id de la DB
         const houseToDelete = await db.House.destroy({
@@ -64,6 +79,8 @@ const houseService = {
             .catch((error) => {
                 console.log(error);
             });
+
+        console.log("houseToDelete === ", houseToDelete);
 
         // Si la maison n'existe pas, stopper la fonction
         if (houseToDelete == 0) {

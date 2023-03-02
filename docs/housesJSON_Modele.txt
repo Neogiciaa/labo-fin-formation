@@ -25,3 +25,12 @@
 
 -- House 3 --
 
+{
+    "name": "Maison de Stephen",
+	"street": "rue Stephen",
+  	"number": 355,
+  	"postalCode": 6000,
+  	"city": "Mons",
+  	"country": "Belgium",
+	"hasAdmin": 1
+}

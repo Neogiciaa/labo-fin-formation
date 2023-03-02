@@ -1,25 +1,34 @@
 const { ErrorResponse } = require('../api-responses/error-response');
 const { SuccessResponse } = require('../api-responses/success-response');
 const houseService = require('../services/house.service');
-const { checkIfGotOtherOne } = require('../services/house_user.service');
 const house_userService = require('../services/house_user.service');
 
 const houseController = {
 
-    getAll: async (req, res) => {
-        // Récupération des données via le service
-        const houses = await houseService.getAll();
+    getAllByUser: async (req, res) => {
+        // Récupération de l'id du user connecté
+        const userConnected = req.user.id;
+
+        // Récupération des données via le service qui gère la table intermédiaire (relation entre user et house)
+        const houses = await house_userService.getAllHouseByUser(userConnected);
+
+        if (houses == undefined) {
+            res.send("Vous n'avez encore crée aucune maison...");
+            return;
+        }
 
         // Envoi de la réponse
         res.json(new SuccessResponse(houses, 200));
     },
 
     getById: async (req, res) => {
+        // Récupérer le user connecté
+        const userId = req.user.id;
         // Récupération de l'id depuis la route
         const id = req.params.id;
 
         // Récupération de la maison via son id
-        const house = await houseService.getById(id);
+        const house = await house_userService.getAllHouseByUser(userId);
 
         // Si aucune maison n'a été trouvée => 404
         if (house == null) {
@@ -40,33 +49,19 @@ const houseController = {
 
         // Ajout dans la DB
         const houseCreated = await houseService.add(data);
-
-        console.log("Je suis la nouvelle maison -> ", houseCreated);
         
         // Récupération de l'id de la maison qui vient d'être crée
         const houseId = houseCreated.id;
-
-        // Récupération de l'état de la propriété mainHouse de cette nouvelle maison
-        const mainHouse = houseCreated.mainHouse;
 
         // Créer le lien entre la maison fraîchement crée et son utilisateur
         await house_userService.add(userConnected, houseId);
 
         // Vérifier si l'utilisateur à déjà au minimum 1 autre maison dans sa liste
-        const userHasOtherHouseYet = await house_userService.checkIfGotOtherOne(userConnected);
+        const userHasOtherHouseYet = await house_userService.getAll(userConnected);
 
-        console.log("Je suis userHasOtherHouseYet -> ", userHasOtherHouseYet);
-
-        console.log('Je suis la propriété mainHouse de la nouvelle maison -> ', mainHouse);
-
-        console.log("JE SUIS LE 2e ELEMENT DU TABLEAU userHasOtherHouseYet, je suis undefined si user n'a pas d'autre maison -> ", userHasOtherHouseYet[1]);
-
-        // Si la méthode checkIfGotOtherOne renvoie undefined, ça veut dire que je n'ai pas d'autre maison après avoir crée celle-ci donc la propriété mainHouse doit passer à "true" via une méthode update
+        // Si la méthode getAll ne renvoie qu'un seul élément (à l'index 0) et donc undefined à l'index 1, ça veut dire que je n'ai pas d'autre maison après avoir crée celle-ci donc la propriété mainHouse doit passer à "true" via une méthode update
         if (userHasOtherHouseYet[1] === undefined) {
-            await house_userService.updateMainHouseStatus(houseId, mainHouse);
-            console.log("J'entre dans la condition si je n'ai pas d'autre maison donc mainHouse = true", mainHouse);
-        } else {
-            console.log("J'ai déjà une autre maison donc celle-ci n'est pas ma principale donc mainHouse = false", mainHouse);
+            await houseService.updateMainHouseStatus(houseId);
         }
 
         // Envoi de la réponse
@@ -97,13 +92,19 @@ const houseController = {
     },
 
     delete: async (req, res) => {
+        // Récupérer l'id params
         const id = req.params.id;
 
+        // Appeller le service en lui passant l'id de l'élément à delete
         const deletedHouse = await houseService.delete(id);
 
+        // Si deledHouse renvoie null, c'est que la maison qu'on cherche à supprimer n'existe pas.
         if (deletedHouse == null) {
             res.send(new ErrorResponse("La maison n'existe pas !", 404));
         }
+
+        // Si la maison a bien été supprimé et qu'elle était considérée comme la Résidence Principale, il faut transférer ce status à la prochaine maison sur la liste
+        
 
         res.send("La maison a bien été supprimée");
     }
