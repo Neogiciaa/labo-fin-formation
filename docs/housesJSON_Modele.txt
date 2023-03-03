@@ -6,8 +6,7 @@
   	"number": 172,
   	"postalCode": 5000,
   	"city": "Namur",
-  	"country": "Belgium",
-	"hasAdmin": 1
+  	"country": "Belgium"
 }
 
 
@@ -19,8 +18,7 @@
   	"number": 11,
   	"postalCode": 5000,
   	"city": "Namur",
-  	"country": "Belgium",
-	"hasAdmin": 1
+  	"country": "Belgium"
 }
 
 -- House 3 --
@@ -31,6 +29,5 @@
   	"number": 355,
   	"postalCode": 6000,
   	"city": "Mons",
-  	"country": "Belgium",
-	"hasAdmin": 1
+  	"country": "Belgium"
 }
