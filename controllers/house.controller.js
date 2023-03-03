@@ -64,7 +64,7 @@ const houseController = {
         // Créer le lien entre la maison fraîchement crée et son utilisateur
         await house_userService.add(userConnected, houseId);
 
-        //TODO to fix la logique pour updateMainHouseStatus !
+        //TODO Si mainHouse a été cochée dans le front, update le mainHouse status de la 1ère maison à false
 
         // Vérifier si l'utilisateur à déjà au minimum 1 autre maison dans sa liste
         const userHasOtherHouseYet = await house_userService.getAll(userConnected);
@@ -120,9 +120,20 @@ const houseController = {
 
         // Vérifier qu'une relation existe
         const isExist = await house_userService.relationExist(userId, houseId);
-
+        
         if (!isExist) {
             return res.sendStatus(403);
+        }
+
+        // Récupérer toutes les maisons du user connecté dans un tableau
+        const checkIfOtherHouse = await house_userService.getAllHouseByUser(userId);
+
+        //TODO logique à adapter pour la situation où le user aurait update le status manuellement sur une autre maison au préalable. Trouver l'index à update qui ne se trouvera pas toujours en index 0...
+        // La toute première maison qui a été crée sur le compte user a été initialisée par défaut comme étant mainHouse true. Celle-ci se trouve à l'index 0 du tableau.
+        // Mettre à jour le status mainHouse à true de la prochaine maison dans la liste, uniquement si la maison en cours de suppression se trouve à l'index 0.
+        if (checkIfOtherHouse.houses[0].id === houseId && !(checkIfOtherHouse.houses[1] === undefined)) {
+
+            await houseService.updateMainHouseStatus(checkIfOtherHouse.houses[1].id);
         }
 
         // Appeller le service en lui passant l'id de l'élément à delete
