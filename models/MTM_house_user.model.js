@@ -11,6 +11,12 @@ module.exports = (sequelize) => {
 
     const MTM_house_user = sequelize.define('MTM_house_user', {
 
+        id: {
+            type: DataTypes.BIGINT(),
+            autoIncrement: true,
+            primaryKey: true
+        },
+
         hasAdmin: {
             type: DataTypes.BIGINT(),
             required: true,
