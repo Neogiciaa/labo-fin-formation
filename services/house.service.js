@@ -54,7 +54,7 @@ const houseService = {
             }
         })
     },
-    //TODO Si la maison a bien été supprimé et qu'elle était considérée comme la Résidence Principale, il faut transférer ce status à la prochaine maison sur la liste
+
     delete: async (id) => {
         // Récupération de l'id de la DB
         const houseToDelete = await db.House.destroy({

@@ -46,9 +46,10 @@ const accessUserOnly = (options = {userOnly : true}) => {
         console.log("tokenData.id -> ", tokenData.id);
         console.log("req.user.id -> ", req.user.id);
 
-        if (options.userOnly && tokenData.id === req.user.id) { //TODO condition req.params.id fonctionne sur les Users // \\ condition req.user.id fonctionne sur les Houses - Faire un nouveau middleware !!
+        if (options.userOnly && tokenData.id === req.user.id) {
             console.log("userOnly -> ", options.userOnly);
             req.user = tokenData;
+            console.log("req.user -> ", req.user);
             next();
         }
         

@@ -87,7 +87,7 @@ const house_userService = {
         if (relationExist === null) {
             console.log("Je suis relationExist = null -> ", relationExist);
 
-            return;
+            return null;
         }
 
         return relationExist;
