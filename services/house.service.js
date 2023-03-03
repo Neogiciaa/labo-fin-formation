@@ -3,21 +3,6 @@ const db = require('../models')
 
 const houseService = {
 
-    getAll: async () => {
-        // Récupération des maisons
-        const house = await db.House.findAll();
-
-        if (!house) {
-
-            return null;
-        }
-
-        // Envoi des données dans un objet DTO
-        return {
-            houses: house.map(house => new HouseDTO(house))
-        }
-    },
-
     getById: async (id) => {
         // Récupération d'une maison via son id
         const house = await db.House.findByPk(id);

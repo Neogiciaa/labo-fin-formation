@@ -11,7 +11,6 @@ const houseValidator = yup.object().shape({
 
 });
 
-
 module.exports = {
     houseValidator
 };

@@ -11,6 +11,10 @@ const house_userService = {
             where: { userId }
         })
 
+        if (house_user[0] === undefined) {
+            return;
+        }
+
         console.log(house_user);
 
         return house_user;
@@ -20,12 +24,8 @@ const house_userService = {
         // Récupération de toutes les relations existantes de l'utilisateur avec les maisons qu'il a potentiellement crée.
         const house_user = await house_userService.getAll(userId);
 
-        console.log("getAllHouseByUser a check la table intermédiaire");
-
         // Récupérer l'id de toutes les maisons liées à l'utilisateur via un mapping
-        const housesId = house_user.map(house_user => house_user.dataValues.houseId); // house_user.dataValues.houseId
-
-        console.log("housesId -> ", housesId);
+        const housesId = house_user.map(house_user => house_user.houseId); // house_user.dataValues.houseId
 
         // Si la longueur du tableau récupéré juste avant est inférieur à 1, c'est qu'aucune maison n'a été trouvée
         if (housesId.length < 1) {
@@ -48,11 +48,21 @@ const house_userService = {
         }
     },
 
+    getByIdByUser: async(userId, houseId) => {
+        // Récupération de toutes les relations existantes de l'utilisateur avec les maisons qu'il a potentiellement crée.
+        const relationExist = await house_userService.getAll(userId);
+
+        if (!relationExist) {
+
+            return;
+        }
+
+        const house = await houseService.getById(houseId);
+
+        return house
+    },
+
     add: async(userId, houseId) => {
-
-        console.log("user -> ", userId);
-        console.log("house -> ", houseId);
-
         const hasAdmin = userId;
 
         await db.MTM_house_user.create({
@@ -60,19 +70,28 @@ const house_userService = {
             houseId,
             hasAdmin
         });
-
     },
 
-    // checkIfGotOtherOne: async (userId) => {
-    //     const getAllHouseOfUserConnected = await db.MTM_house_user.findAll({
-    //         where: {
-    //             userId
-    //         }
-    //     });
+    relationExist: async (userId, houseId) => {
+        const relationExist = await db.MTM_house_user.findOne({
+            where: {
+                userId: {
+                    [Op.or]: [userId, houseId]
+                },
+                houseId: {
+                    [Op.or]: [houseId, userId]
+                }
+            },
+        });
 
-    //     return getAllHouseOfUserConnected;
-    // }
+        if (relationExist === null) {
+            console.log("Je suis relationExist = null -> ", relationExist);
 
+            return;
+        }
+
+        return relationExist;
+    },
 }
 
 module.exports = house_userService;

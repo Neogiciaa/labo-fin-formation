@@ -7,28 +7,36 @@ const houseController = {
 
     getAllByUser: async (req, res) => {
         // Récupération de l'id du user connecté
-        const userConnected = req.user.id;
+        const userId = req.user.id;
 
         // Récupération des données via le service qui gère la table intermédiaire (relation entre user et house)
-        const houses = await house_userService.getAllHouseByUser(userConnected);
+        const houses = await house_userService.getAll(userId);
 
-        if (houses == undefined) {
-            res.send("Vous n'avez encore crée aucune maison...");
-            return;
+        if (houses == null) {
+
+            return res.send("Vous n'avez encore crée aucune maison...");
         }
 
         // Envoi de la réponse
         res.json(new SuccessResponse(houses, 200));
     },
 
-    getById: async (req, res) => {
+    getByIdByUser: async (req, res) => {
         // Récupérer le user connecté
         const userId = req.user.id;
+
         // Récupération de l'id depuis la route
-        const id = req.params.id;
+        const houseId = req.params.id;
+
+        // Vérifier qu'une relation existe
+        const isExist = await house_userService.relationExist(userId, houseId);
+
+        if (!isExist) {
+            return res.sendStatus(403);
+        }
 
         // Récupération de la maison via son id
-        const house = await house_userService.getAllHouseByUser(userId);
+        const house = await houseService.getById(houseId);
 
         // Si aucune maison n'a été trouvée => 404
         if (house == null) {
@@ -56,6 +64,8 @@ const houseController = {
         // Créer le lien entre la maison fraîchement crée et son utilisateur
         await house_userService.add(userConnected, houseId);
 
+        //TODO to fix la logique pour updateMainHouseStatus !
+
         // Vérifier si l'utilisateur à déjà au minimum 1 autre maison dans sa liste
         const userHasOtherHouseYet = await house_userService.getAll(userConnected);
 
@@ -73,13 +83,23 @@ const houseController = {
         // Récupération des infos du body (validé par le middleware)
         const data = req.validateData;
 
+        // Récupération de l'id du user connecté
+        const userId = req.user.id;
+
         // Récupération de l'id de la maison
-        const id = req.params.id;
+        const houseId = req.params.id;
+
+        // Vérifier qu'une relation existe
+        const isExist = await house_userService.relationExist(userId, houseId);
+
+        if (!isExist) {
+            return res.sendStatus(403);
+        }
 
         // Mise à jour dans la DB
-        const houseUpdated = await houseService.update(id, data);
+        const houseUpdated = await houseService.update(houseId, data);
 
-        console.log('Je met à jour la DB', id, data);
+        console.log('Je met à jour la DB', houseId, data);
 
         // Si l'élément est inexistant -> Error 404
         if (!houseUpdated) {
@@ -93,19 +113,28 @@ const houseController = {
 
     delete: async (req, res) => {
         // Récupérer l'id params
-        const id = req.params.id;
+        const houseId = req.params.id;
+
+        // Récupération de l'id du user connecté
+        const userId = req.user.id;
+
+        // Vérifier qu'une relation existe
+        const isExist = await house_userService.relationExist(userId, houseId);
+
+        if (!isExist) {
+            return res.sendStatus(403);
+        }
 
         // Appeller le service en lui passant l'id de l'élément à delete
-        const deletedHouse = await houseService.delete(id);
+        const deletedHouse = await houseService.delete(houseId);
 
         // Si deledHouse renvoie null, c'est que la maison qu'on cherche à supprimer n'existe pas.
         if (deletedHouse == null) {
             res.send(new ErrorResponse("La maison n'existe pas !", 404));
         }
 
-        // Si la maison a bien été supprimé et qu'elle était considérée comme la Résidence Principale, il faut transférer ce status à la prochaine maison sur la liste
+        // TODO Si la maison a bien été supprimé et qu'elle était considérée comme la Résidence Principale, il faut transférer ce status à la prochaine maison sur la liste
         
-
         res.send("La maison a bien été supprimée");
     }
 }
