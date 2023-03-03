@@ -9,7 +9,7 @@ const generateJWT = ({ id, mail }) => {
             algorithm: 'HS512',
             audience: process.env.JWT_AUDIENCE,
             issuer: process.env.JWT_ISSUER,
-            expiresIn: '5h'
+            expiresIn: '5h' //TODO diminuer le délai entre chaque nouveau token pour le build final !!
         };
 
         jwt.sign(data, secret, options, (error, token) => {
@@ -22,7 +22,7 @@ const generateJWT = ({ id, mail }) => {
         });
     });
 };
-
+//TODO implémenter le isAdmin
 const decodeJWT = (token) => {
 
 

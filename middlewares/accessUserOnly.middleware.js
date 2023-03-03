@@ -2,11 +2,11 @@ const { decodeJWT } = require('../utils/jwt.utils');
 
 /**
  * Middleware d'authentification via les JSON Web Token
- * @param {{adminOnly: boolean}} options
+ * @param {{userOnly: boolean}} options
  * @returns {(req: Request, res: Response, next: NextFunction) => Void}
  */
 
-const authentificate = (options = {adminOnly : false}) => {
+const accessUserOnly = (options = {userOnly : true}) => {
 
     /** 
        * Middleware pour gérer les jwt
@@ -43,19 +43,21 @@ const authentificate = (options = {adminOnly : false}) => {
             return res.sendStatus(403);
         }
 
-        if (options.adminOnly && !tokenData.isAdmin) {
-            // Erreur 403 si l'utilisateur n'a pas les droits
-            console.log("admin -> ", options.adminOnly);
-            return res.sendStatus(403);
-        }
+        console.log("tokenData.id -> ", tokenData.id);
+        console.log("req.user.id -> ", req.user.id);
 
-        else {
-            console.log("admin -> ", options.adminOnly);
+        if (options.userOnly && tokenData.id === req.user.id) { //TODO condition req.params.id fonctionne sur les Users // \\ condition req.user.id fonctionne sur les Houses - Faire un nouveau middleware !!
+            console.log("userOnly -> ", options.userOnly);
             req.user = tokenData;
             next();
+        }
+        
+        else {
+            console.log("userOnly -> ", options.userOnly);
+            return res.sendStatus(403);
         }
 
     };
 };
 
-module.exports = authentificate;
+module.exports = accessUserOnly;
