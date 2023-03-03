@@ -121,11 +121,6 @@ const userService = {
         }
 
     },
-
-    // TODO check l'implémentation d'un GetHouse par l'id du user
-    // getHouses: async (id) => {
-    //     const user = await User.findById(id)  -- Probablement a mettre dans le House Service ??
-    // } 
 };
 
 module.exports = userService
